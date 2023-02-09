@@ -6,11 +6,11 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"serve": "HOST=localhost PORT=1234 npx y-websocket"
 	},
 	"devDependencies": {
-		"@fontsource/fira-mono": "^4.5.10",
-		"@neoconfetti/svelte": "^1.0.0",
+		"@fontsource/inter": "^4.5.15",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.5.0",
 		"@types/cookie": "^0.5.1",
@@ -22,6 +22,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@syncedstore/core": "^0.4.3",
+		"@syncedstore/svelte": "^0.4.3",
+		"svelt-yjs": "^1.1.0",
 		"y-websocket": "^1.4.5",
 		"yjs": "^13.5.45"
 	}

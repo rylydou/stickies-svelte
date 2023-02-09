@@ -1,32 +1,32 @@
 <script lang="ts">
-	import BoardView from './BoardView.svelte'
-	import * as Y from 'yjs'
-	import { WebsocketProvider } from 'y-websocket'
+	import { getYjsValue } from '@syncedstore/core'
+	import { svelteSyncedStore } from '@syncedstore/svelte'
 	import { onMount } from 'svelte'
+	import { WebsocketProvider } from 'y-websocket'
+	import type { Doc } from 'yjs'
+	import { globalStore } from './store'
 
-	const doc = new Y.Doc()
+	var store = svelteSyncedStore(globalStore)
+
+	$: stickies = $store.todos
+
+	var new_todo = ''
+	function insert() {
+		stickies.push({ title: new_todo, completed: false })
+		new_todo = ''
+	}
 
 	onMount(() => {
-		const websocketProvider = new WebsocketProvider(
+		let wsp = new WebsocketProvider(
 			'ws://localhost:1234',
-			'test-room',
-			doc
+			'test_room',
+			getYjsValue(globalStore) as Doc
 		)
 
-		websocketProvider.on('status', (event: any) => {
+		wsp.on('status', (event: any) => {
 			console.log(event.status) // logs "connected" or "disconnected"
 		})
 	})
-
-	const yarray = doc.getArray('my-array')
-	yarray.observe((event) => {
-		console.log('yarray was modified')
-	})
-
-	function insert(event: any) {
-		// every time a local or remote client modifies yarray, the observer is called
-		yarray.insert(0, ['val']) // => "yarray was modified"
-	}
 </script>
 
 <svelte:head>
@@ -34,9 +34,26 @@
 	<meta name="description" content="Sticky note board" />
 </svelte:head>
 
-<BoardView />
-
+{#each stickies as sticky, i}
+	<div class="sticky">
+		<input type="checkbox" bind:checked={sticky.completed} />
+		<input type="text" bind:value={sticky.title} />
+	</div>
+{/each}
+<hr />
+<input
+	type="text"
+	bind:value={new_todo}
+	on:keypress={(e) => {
+		if (e.code == 'Enter') {
+			insert()
+		}
+	}}
+/>
 <button on:click={insert}>Insert</button>
 
 <style>
+	.sticky {
+		display: flex;
+	}
 </style>
