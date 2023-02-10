@@ -1,5 +1,5 @@
 <script>
-	import './styles.css'
+	import '$lib/styles/index.scss'
 </script>
 
 <div class="app">

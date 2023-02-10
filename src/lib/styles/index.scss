@@ -1,0 +1,11 @@
+@import url(_reset.scss);
+
+body {
+	min-height: 100vh;
+	font-family: "Inter", sans-serif;
+	text-rendering: optimizeSpeed;
+	font-size: 14px;
+	line-height: 20px;
+
+	background-color: white;
+}

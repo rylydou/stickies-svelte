@@ -5,31 +5,7 @@
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
-	position: relative;
-	font-weight: normal;
-
-	color: unset;
-	background: none;
-	border: none;
-}
-
-/* This may be a terrible idea */
-body *:not(path) {
-	all: unset;
-}
-
-/* Remove default margin */
-body,
-h1,
-h2,
-h3,
-h4,
-p,
-figure,
-blockquote,
-dl,
-dd {
-	margin: 0;
+	font: unset;
 }
 
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
@@ -41,18 +17,6 @@ ol[role='list'] {
 /* Set core root defaults */
 html:focus-within {
 	scroll-behavior: smooth;
-}
-
-/* Set core body defaults */
-body {
-	min-height: 100vh;
-	text-rendering: optimizeSpeed;
-	line-height: 1.5;
-}
-
-/* A elements that don't have a class get default styles */
-a:not([class]) {
-	text-decoration-skip-ink: auto;
 }
 
 /* Make images easier to work with */
