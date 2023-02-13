@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DocData, ListData, StickyData, ID, WrappedID } from '$lib/doc'
+	import type { DocData, StickyData, ID, WrappedID } from '$lib/doc'
 
 	import { flip } from 'svelte/animate'
 	import { dndzone, type DndEvent } from 'svelte-dnd-action'
@@ -40,18 +40,19 @@
 </script>
 
 <div
-	class="bg-gray-200 w-80 max-h-full flex-shrink-0 flex flex-col gap-2 rounded"
+	class="bg-gray-200 w-80 max-h-full flex-shrink-0 flex flex-col gap-2 rounded text-gray-900"
 >
-	<div class="flex flex-row px-2 pt-2">
+	<div class="flex flex-row gap-2 px-2 pt-2">
 		<input
-			class="bg-transparent px-2 py-0 rounded w-full focus:outline focus:outline-primary-400 focus:bg-white"
+			class="w-full bg-transparent px-2 py-1 rounded focus:outline focus:outline-primary-400 focus:bg-white font-bold"
 			type="text"
 			bind:value={list_data.title}
 		/>
+		<span class="text-gray-500 px-2 py-1">{list_data.sticky_uuids.length}</span>
 	</div>
 	<div
 		class="px-2 flex flex-col gap-2 overflow-y-auto"
-		use:dndzone={{ items: sticky_ids, flipDurationMs: 0, dragDisabled: true }}
+		use:dndzone={{ items: sticky_ids, dragDisabled: true }}
 		on:consider={handle_consider}
 		on:finalize={handle_finalize}
 	>
