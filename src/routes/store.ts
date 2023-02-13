@@ -1,10 +1,6 @@
-import { getYjsValue, syncedStore } from "@syncedstore/core"
-import { onMount } from 'svelte'
-import { WebsocketProvider } from "y-websocket"
+import { syncedStore } from "@syncedstore/core"
+import type { DocData } from '../lib/doc'
 
-export type Todo = {
-	title: string
-	completed: boolean
-}
-
-export const globalStore = syncedStore({ todos: [] as Todo[] })
+export const globalStore = syncedStore({
+	doc: {} as DocData
+})

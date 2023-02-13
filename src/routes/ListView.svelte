@@ -1,0 +1,84 @@
+<script lang="ts">
+	import type { DocData, ListData, StickyData, ID, WrappedID } from '$lib/doc'
+
+	import { flip } from 'svelte/animate'
+	import { dndzone, type DndEvent } from 'svelte-dnd-action'
+	import StickyView from './StickyView.svelte'
+
+	export let doc_data: DocData
+	export let list_id: ID
+
+	$: list_data = doc_data.lists_by_id[list_id]
+	$: sticky_ids = list_data.sticky_uuids
+
+	let todo_title_entry = ''
+	function insert() {
+		const id = doc_data.next_id++
+		const sticky: StickyData = {
+			id: id,
+			title: todo_title_entry,
+		}
+		doc_data.stickies_by_id[id] = sticky
+		list_data.sticky_uuids.push({ id })
+
+		todo_title_entry = ''
+	}
+
+	function handle_consider(e: CustomEvent<DndEvent<WrappedID>>) {
+		console.log('consider: ', e.detail.info, e.detail.items)
+		handleSort(e)
+	}
+
+	function handle_finalize(e: CustomEvent<DndEvent<WrappedID>>) {
+		console.log('final: ', e.detail.info, e.detail.items)
+		handleSort(e)
+	}
+
+	function handleSort(e: CustomEvent<DndEvent<WrappedID>>) {
+		sticky_ids = e.detail.items
+	}
+</script>
+
+<div
+	class="bg-gray-200 w-80 max-h-full flex-shrink-0 flex flex-col gap-2 rounded"
+>
+	<div class="flex flex-row px-2 pt-2">
+		<input
+			class="bg-transparent px-2 py-0 rounded w-full focus:outline focus:outline-primary-400 focus:bg-white"
+			type="text"
+			bind:value={list_data.title}
+		/>
+	</div>
+	<div
+		class="px-2 flex flex-col gap-2 overflow-y-auto"
+		use:dndzone={{ items: sticky_ids, flipDurationMs: 0, dragDisabled: true }}
+		on:consider={handle_consider}
+		on:finalize={handle_finalize}
+	>
+		{#each sticky_ids as { id } (id)}
+			{#if id}
+				<!-- <div class="sticky">
+					{doc_data.stickies_by_id[id].title}
+				</div> -->
+				<StickyView {doc_data} sticky_id={id} />
+			{:else}
+				~~Error~~
+			{/if}
+		{/each}
+	</div>
+
+	<div class="flex flex-row px-2 pb-2">
+		<input
+			class="w-full p-2 rounded shadow focus:outline focus:outline-primary-400"
+			type="text"
+			placeholder="Add a new sticky..."
+			bind:value={todo_title_entry}
+			on:keypress={(e) => {
+				if (e.code == 'Enter') insert()
+			}}
+		/>
+	</div>
+</div>
+
+<style lang="postcss">
+</style>
