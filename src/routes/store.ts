@@ -15,3 +15,7 @@ export let websocket_provider = new WebsocketProvider(
 	doc_store_sync,
 	{ connect: false, }
 )
+
+websocket_provider.on('status', e => {
+	console.log('websocket-sync', e.status)
+})

@@ -1,18 +1,34 @@
 <script lang="ts">
 	import type { DocData, StickyData, ID, WrappedID } from '$lib/doc'
 
-	import { flip } from 'svelte/animate'
 	import { dndzone, type DndEvent } from 'svelte-dnd-action'
 	import StickyView from './StickyView.svelte'
+	import type { CrossfadeParams, TransitionConfig } from 'svelte/transition'
 
 	export let doc_data: DocData
 	export let list_id: ID
+	export let send: (
+		node: Element,
+		params: CrossfadeParams & {
+			key: any
+		}
+	) => () => TransitionConfig
+	export let receive: (
+		node: Element,
+		params: CrossfadeParams & {
+			key: any
+		}
+	) => () => TransitionConfig
 
 	$: list_data = doc_data.lists_by_id[list_id]
 	$: sticky_ids = list_data.sticky_uuids
 
 	let todo_title_entry = ''
 	function insert() {
+		if (todo_title_entry.trim().length == 0) {
+			todo_title_entry = 'New sticky'
+		}
+
 		const id = doc_data.next_id++
 		const sticky: StickyData = {
 			id: id,
@@ -40,7 +56,7 @@
 </script>
 
 <div
-	class="bg-gray-200 w-80 max-h-full flex-shrink-0 flex flex-col gap-2 rounded text-gray-900"
+	class="bg-gray-200/90 backdrop-blur w-80 max-h-full flex-shrink-0 flex flex-col gap-2 rounded text-gray-900"
 >
 	<div class="flex flex-row gap-2 px-2 pt-2">
 		<input
@@ -48,7 +64,11 @@
 			type="text"
 			bind:value={list_data.title}
 		/>
-		<span class="text-gray-500 px-2 py-1">{list_data.sticky_uuids.length}</span>
+		{#if list_data.sticky_uuids.length > 0}
+			<span class="text-gray-500 px-2 py-1"
+				>{list_data.sticky_uuids.length}</span
+			>
+		{/if}
 	</div>
 	<div
 		class="px-2 flex flex-col gap-2 overflow-y-auto"
@@ -61,7 +81,7 @@
 				<!-- <div class="sticky">
 					{doc_data.stickies_by_id[id].title}
 				</div> -->
-				<StickyView {doc_data} sticky_id={id} />
+				<StickyView {doc_data} sticky_id={id} {send} {receive} />
 			{:else}
 				~~Error~~
 			{/if}
