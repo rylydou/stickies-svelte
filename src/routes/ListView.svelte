@@ -5,36 +5,26 @@
 	import StickyView from './StickyView.svelte'
 	import type { CrossfadeParams, TransitionConfig } from 'svelte/transition'
 
-	export let doc_data: DocData
+	export let doc: DocData
 	export let list_id: ID
-	export let send: (
-		node: Element,
-		params: CrossfadeParams & {
-			key: any
-		}
-	) => () => TransitionConfig
-	export let receive: (
-		node: Element,
-		params: CrossfadeParams & {
-			key: any
-		}
-	) => () => TransitionConfig
 
-	$: list_data = doc_data.lists_by_id[list_id]
+	$: list_data = doc.lists_by_id[list_id]
 	$: sticky_ids = list_data.sticky_uuids
 
 	let todo_title_entry = ''
 	function insert() {
+		const id = doc.next_id++
+
 		if (todo_title_entry.trim().length == 0) {
-			todo_title_entry = 'New sticky'
+			todo_title_entry = 'New sticky #' + id
 		}
 
-		const id = doc_data.next_id++
 		const sticky: StickyData = {
 			id: id,
 			title: todo_title_entry,
 		}
-		doc_data.stickies_by_id[id] = sticky
+
+		doc.stickies_by_id[id] = sticky
 		list_data.sticky_uuids.push({ id })
 
 		todo_title_entry = ''
@@ -56,14 +46,10 @@
 </script>
 
 <div
-	class="bg-gray-200/90 backdrop-blur w-80 max-h-full flex-shrink-0 flex flex-col gap-2 rounded text-gray-900"
+	class="bg-gray-200/90 backdrop-blur w-80 max-h-full flex-shrink-0 flex flex-col gap-2 rounded"
 >
 	<div class="flex flex-row gap-2 px-2 pt-2">
-		<input
-			class="w-full bg-transparent px-2 py-1 rounded focus:outline focus:outline-primary-400 focus:bg-white font-bold"
-			type="text"
-			bind:value={list_data.title}
-		/>
+		<input class="font-bold" type="text" bind:value={list_data.title} />
 		{#if list_data.sticky_uuids.length > 0}
 			<span class="text-gray-500 px-2 py-1"
 				>{list_data.sticky_uuids.length}</span
@@ -81,7 +67,7 @@
 				<!-- <div class="sticky">
 					{doc_data.stickies_by_id[id].title}
 				</div> -->
-				<StickyView {doc_data} sticky_id={id} {send} {receive} />
+				<StickyView {doc} {id} />
 			{:else}
 				~~Error~~
 			{/if}
@@ -90,7 +76,6 @@
 
 	<div class="flex flex-row px-2 pb-2">
 		<input
-			class="w-full p-2 rounded shadow focus:outline focus:outline-primary-400"
 			type="text"
 			placeholder="Add a new sticky..."
 			bind:value={todo_title_entry}

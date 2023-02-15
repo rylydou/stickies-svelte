@@ -6,9 +6,11 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				primary: colors.amber
+				primary: colors.sky
 			}
 		},
 	},
-	plugins: [],
+	plugins: [
+		require('@tailwindcss/forms')({ strategy: 'base' }),
+	],
 }

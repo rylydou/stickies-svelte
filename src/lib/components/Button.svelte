@@ -7,7 +7,7 @@
 </button>
 
 <style lang="postcss">
-	button {
+	/* button {
 		@apply px-2 py-1 rounded font-bold bg-white/90 text-gray-900;
-	}
+	} */
 </style>

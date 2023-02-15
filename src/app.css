@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+	input:not(.reset),
+	button:not(.reset),
+		textarea:not(.reset){
+		@apply px-2 py-1 bg-black/10 text-gray-900 border-none rounded
+	}
+
+	input:not(.reset):disabled,
+	button:not(.reset):disabled
+		textarea:not(.reset):disabled{
+		@apply bg-transparent
+	}
+
+	button:not(.reset) {
+		@apply font-bold;
+	}
+
+	input[type="text"]:not(.reset),
+	textarea:not(.reset) {
+		@apply focus:bg-white focus:ring focus:ring-gray-900 w-full
+	}
+
+	input[type="checkbox"]:not(.reset) {
+		@apply w-4 h-4 p-0 checked:bg-primary-400 checked:text-red-600
+	}
+}

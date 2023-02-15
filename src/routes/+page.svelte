@@ -2,7 +2,8 @@
 	import Button from '$lib/components/Button.svelte'
 	import type { DocData, ListData } from '$lib/doc'
 	import { svelteSyncedStore } from '@syncedstore/svelte'
-	import { crossfade } from 'svelte/transition'
+	import { fly, scale } from 'svelte/transition'
+	import { cubicIn, backOut, sineOut } from 'svelte/easing'
 	import ListView from './ListView.svelte'
 	import { selected_sticky } from './state_store'
 	import { doc_store, websocket_provider } from './store'
@@ -66,10 +67,6 @@
 		ws_connecting = false
 		ws_connected = false
 	})
-
-	const [send, receive] = crossfade({
-		duration: 200,
-	})
 </script>
 
 <svelte:head>
@@ -80,11 +77,9 @@
 <div
 	class="flex flex-col bg-[#0079bf] h-screen w-screen overflow-hidden text-sm"
 >
-	<div class="flex flex-row p-2 gap-2">
+	<div class="flex flex-row items-center p-2 gap-2 bg-white">
 		<Button on:click={init_doc}>New Document</Button>
 		<Button>Config</Button>
-
-		Selected sticky# {$selected_sticky}
 
 		<div class="flex-grow" />
 
@@ -106,11 +101,10 @@
 	>
 		{#if lists}
 			{#each lists as list (list.id)}
-				<ListView doc_data={doc} list_id={list.id} {send} {receive} />
+				<ListView {doc} list_id={list.id} />
 			{/each}
 
 			<input
-				class="bg-transparent placeholder:text-white p-2 rounded text-black focus:outline focus:outline-primary-400 focus:bg-white focus:placeholder:text-gray-400 font-bold"
 				type="text"
 				placeholder="Add a new list..."
 				bind:value={list_title_entry}
@@ -129,19 +123,44 @@
 
 {#if $selected_sticky != 0}
 	<div
-		class="bg-black/50 absolute top-0  left-0 w-full h-full overflow-hidden will-change-transform flex justify-center items-center"
-		in:receive={{ key: $selected_sticky }}
-		out:send={{ key: $selected_sticky }}
+		class="bg-white absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 min-w-max w-1/3 will-change-transform flex flex-col gap-4 p-4 justify-start rounded-lg shadow-2xl ring ring-gray-900"
+		in:scale={{ duration: 400, easing: backOut }}
+		out:scale={{ duration: 200, easing: cubicIn }}
 	>
-		<input
-			type="text"
-			bind:value={doc.stickies_by_id[$selected_sticky].title}
-		/>
-		<Button
-			on:click={(e) => {
-				$selected_sticky = 0
-			}}>Close</Button
-		>
+		<div class="block w-full">
+			<span class="font-bold"> Edit Sticky </span>
+
+			<Button
+				class="float-right"
+				on:click={(e) => {
+					$selected_sticky = 0
+				}}
+			>
+				Done
+			</Button>
+
+			<span class="text-gray-400 float-right mr-4">id:{$selected_sticky}</span>
+		</div>
+
+		<label class="block">
+			<span>Title</span>
+			<input
+				class="mt-1"
+				type="text"
+				bind:value={doc.stickies_by_id[$selected_sticky].title}
+				autofocus
+			/>
+		</label>
+
+		<label class="block">
+			<span>Description</span>
+			<textarea class="mt-1" />
+		</label>
+
+		<label class="flex flex-row items-center gap-2">
+			<input type="checkbox" />
+			<span class="">Receive notifications on updates</span>
+		</label>
 	</div>
 {/if}
 
