@@ -5,26 +5,59 @@
 @layer components {
 	input:not(.reset),
 	button:not(.reset),
-		textarea:not(.reset){
-		@apply px-2 py-1 bg-black/10 text-gray-900 border-none rounded
+	select:not(.reset),
+	textarea:not(.reset){
+		@apply appearance-none px-2 py-1 bg-black/10 text-gray-900 border-none rounded;
 	}
 
 	input:not(.reset):disabled,
-	button:not(.reset):disabled
-		textarea:not(.reset):disabled{
-		@apply bg-transparent
+	button:not(.reset):disabled,
+	textarea:not(.reset):disabled {
+		@apply opacity-50;
 	}
 
 	button:not(.reset) {
-		@apply font-bold;
+		@apply font-bold text-center;
+	}
+
+	select:not(.reset) {
+		@apply pr-8 cursor-pointer;
+	}
+
+	select:not(.reset) {
 	}
 
 	input[type="text"]:not(.reset),
 	textarea:not(.reset) {
-		@apply focus:bg-white focus:ring focus:ring-gray-900 w-full
+		@apply w-full;
+	}
+
+	button:not(.reset),
+	input[type="text"]:not(.reset),
+	textarea:not(.reset),
+	select:not(.reset) {
+		@apply focus:bg-white focus:ring focus:ring-gray-900;
+	}
+
+	input[type="radio"] {
+		@apply
+			p-0 w-4 h-4 cursor-pointer
+			checked:bg-primary-400
 	}
 
 	input[type="checkbox"]:not(.reset) {
-		@apply w-4 h-4 p-0 checked:bg-primary-400 checked:text-red-600
+		@apply
+			p-0 w-8 h-4 relative cursor-pointer
+			transition-colors duration-75
+
+
+			after:content-[''] after:w-4 after:h-4 after:absolute after:bg-white after:rounded
+			after:ring after:ring-gray-200
+			after:transition-transform after:duration-75
+
+			focus:after:ring-gray-900
+
+			checked:bg-primary-400
+			checked:after:translate-x-4;
 	}
 }

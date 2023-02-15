@@ -46,7 +46,7 @@
 </script>
 
 <div
-	class="bg-gray-200/90 backdrop-blur w-80 max-h-full flex-shrink-0 flex flex-col gap-2 rounded"
+	class="bg-gray-100 backdrop-blur w-80 max-h-full flex-shrink-0 flex flex-col gap-2 rounded"
 >
 	<div class="flex flex-row gap-2 px-2 pt-2">
 		<input class="font-bold" type="text" bind:value={list_data.title} />

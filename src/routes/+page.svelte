@@ -123,7 +123,7 @@
 
 {#if $selected_sticky != 0}
 	<div
-		class="bg-white absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 min-w-max w-1/3 will-change-transform flex flex-col gap-4 p-4 justify-start rounded-lg shadow-2xl ring ring-gray-900"
+		class="bg-white absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 min-w-[40em] w-1/3 will-change-transform flex flex-col gap-4 p-4 justify-start rounded-lg shadow-2xl ring ring-gray-900 max-h-[90vh] overflow-y-auto"
 		in:scale={{ duration: 400, easing: backOut }}
 		out:scale={{ duration: 200, easing: cubicIn }}
 	>
@@ -154,12 +154,34 @@
 
 		<label class="block">
 			<span>Description</span>
-			<textarea class="mt-1" />
+			<textarea class="mt-1" rows="6" />
+		</label>
+
+		<label class="block">
+			<span>Priority</span>
+			<select class="ml-1">
+				<option>High</option>
+				<option>Medium</option>
+				<option>Low</option>
+			</select>
+		</label>
+
+		<label class="flex flex-row items-center gap-2">
+			<input type="radio" name="radio-group" />
+			<span>Option 1</span>
+		</label>
+		<label class="flex flex-row items-center gap-2">
+			<input type="radio" name="radio-group" />
+			<span>Option 2</span>
+		</label>
+		<label class="flex flex-row items-center gap-2">
+			<input type="radio" name="radio-group" />
+			<span>Option 3</span>
 		</label>
 
 		<label class="flex flex-row items-center gap-2">
 			<input type="checkbox" />
-			<span class="">Receive notifications on updates</span>
+			<span>Receive notifications on updates</span>
 		</label>
 	</div>
 {/if}
