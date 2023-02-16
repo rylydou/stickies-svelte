@@ -22,6 +22,7 @@
 		const sticky: StickyData = {
 			id: id,
 			title: todo_title_entry,
+			description: '',
 		}
 
 		doc.stickies_by_id[id] = sticky

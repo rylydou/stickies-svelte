@@ -24,4 +24,5 @@ export type ListData = {
 export type StickyData = {
 	id: ID,
 	title: string,
+	description: 'text',
 }

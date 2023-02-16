@@ -1,9 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 @import "@fontsource/fira-sans";
 @import "@fontsource/roboto-slab";
 @import "@fontsource/fira-mono";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
 	--ex-fg: 255 0 255
@@ -80,6 +81,7 @@
 			p-0 w-4 h-4 cursor-pointer
 			checked:bg-primary-400
 			focus:ring focus:ring-gray-900
+			rounded-full
 		;
 	}
 

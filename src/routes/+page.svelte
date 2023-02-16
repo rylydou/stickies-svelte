@@ -133,21 +133,6 @@
 		use:clickOutside
 		on:outclick={(e) => ($selected_sticky = 0)}
 	>
-		<div class="block w-full">
-			<span class="font-bold"> Edit Sticky </span>
-
-			<Button
-				class="float-right"
-				on:click={(e) => {
-					$selected_sticky = 0
-				}}
-			>
-				Done
-			</Button>
-
-			<span class="text-gray-400 float-right mr-4">id:{$selected_sticky}</span>
-		</div>
-
 		<label class="block">
 			<span>Title</span>
 			<input
@@ -160,34 +145,11 @@
 
 		<label class="block">
 			<span>Description</span>
-			<textarea class="mt-1" rows="5" />
-		</label>
-
-		<label class="block">
-			<span>Priority</span>
-			<select class="ml-1">
-				<option>High</option>
-				<option>Medium</option>
-				<option>Low</option>
-			</select>
-		</label>
-
-		<label class="flex flex-row items-center gap-2">
-			<input type="radio" name="radio-group" />
-			<span>Option 1</span>
-		</label>
-		<label class="flex flex-row items-center gap-2">
-			<input type="radio" name="radio-group" />
-			<span>Option 2</span>
-		</label>
-		<label class="flex flex-row items-center gap-2">
-			<input type="radio" name="radio-group" />
-			<span>Option 3</span>
-		</label>
-
-		<label class="flex flex-row items-center gap-2">
-			<input type="checkbox" />
-			<span>Receive notifications on updates</span>
+			<textarea
+				class="mt-1"
+				rows="5"
+				bind:value={doc.stickies_by_id[$selected_sticky].description}
+			/>
 		</label>
 	</div>
 {/if}
