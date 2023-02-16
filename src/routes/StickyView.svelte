@@ -21,7 +21,7 @@
 </script>
 
 <button
-	class="sticky"
+	class="sticky reset"
 	title="id:{sticky_data.id}"
 	on:click={click}
 	in:receive={{ key: 'anim' }}
@@ -34,6 +34,9 @@
 
 <style lang="postcss">
 	.sticky {
-		@apply flex flex-row p-0 justify-start bg-white rounded border-b border-gray-300 text-left;
+		@apply flex flex-row p-0 justify-start
+			bg-white rounded
+			text-left text-gray-900;
+		box-shadow: 0 1px hsla(0 0% 0% / 0.1);
 	}
 </style>

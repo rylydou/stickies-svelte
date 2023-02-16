@@ -1,13 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "@fontsource/fira-sans";
+@import "@fontsource/roboto-slab";
+@import "@fontsource/fira-mono";
+
+:root {
+	--ex-fg: 255 0 255
+}
 
 @layer components {
 	input:not(.reset),
 	button:not(.reset),
 	select:not(.reset),
 	textarea:not(.reset){
-		@apply appearance-none px-2 py-1 bg-black/10 text-gray-900 border-none rounded;
+		@apply
+			appearance-none
+			px-2 py-1
+			bg-black/10
+			border-none rounded outline-none
+		;
 	}
 
 	input:not(.reset):disabled,
@@ -25,6 +37,12 @@
 	}
 
 	select:not(.reset) {
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor' class='w-5 h-5'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd' /%3E%3C/svg%3E");
+
+		background-position: right theme(spacing.2) center;
+		background-repeat: no-repeat;
+		background-size: 1.5em 1.5em;
+		padding-right: theme(spacing.10);
 	}
 
 	input[type="text"]:not(.reset),
@@ -32,17 +50,37 @@
 		@apply w-full;
 	}
 
+	button:not(.reset).flat,
+	input[type="text"]:not(.reset).flat,
+	textarea:not(.reset).flat,
+	select:not(.reset).flat {
+		@apply bg-transparent hover:bg-black/10;
+	}
+
 	button:not(.reset),
 	input[type="text"]:not(.reset),
 	textarea:not(.reset),
 	select:not(.reset) {
-		@apply focus:bg-white focus:ring focus:ring-gray-900;
+		@apply focus:bg-white focus:hover:bg-white focus:ring focus:ring-gray-900;
 	}
 
-	input[type="radio"] {
+	textarea:not(.reset) {
+		@apply p-2;
+	}
+
+	input[type="text"]:not(.reset).prompt {
+		@apply
+			cursor-pointer text-center placeholder:text-current
+			focus:cursor-text focus:text-left
+		;
+	}
+
+	input[type="radio"]:not(.reset) {
 		@apply
 			p-0 w-4 h-4 cursor-pointer
 			checked:bg-primary-400
+			focus:ring focus:ring-gray-900
+		;
 	}
 
 	input[type="checkbox"]:not(.reset) {

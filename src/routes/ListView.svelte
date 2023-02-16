@@ -46,15 +46,10 @@
 </script>
 
 <div
-	class="bg-gray-100 backdrop-blur w-80 max-h-full flex-shrink-0 flex flex-col gap-2 rounded"
+	class="bg-gray-200 w-80 max-h-full flex-shrink-0 flex flex-col gap-2 rounded"
 >
 	<div class="flex flex-row gap-2 px-2 pt-2">
-		<input class="font-bold" type="text" bind:value={list_data.title} />
-		{#if list_data.sticky_uuids.length > 0}
-			<span class="text-gray-500 px-2 py-1"
-				>{list_data.sticky_uuids.length}</span
-			>
-		{/if}
+		<input class="font-bold flat" type="text" bind:value={list_data.title} />
 	</div>
 	<div
 		class="px-2 flex flex-col gap-2 overflow-y-auto"
@@ -77,6 +72,7 @@
 	<div class="flex flex-row px-2 pb-2">
 		<input
 			type="text"
+			class="flat prompt"
 			placeholder="Add a new sticky..."
 			bind:value={todo_title_entry}
 			on:keypress={(e) => {
