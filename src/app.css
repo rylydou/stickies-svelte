@@ -100,4 +100,8 @@
 			checked:bg-primary-400
 			checked:after:translate-x-4;
 	}
+
+	code {
+		@apply font-mono font-bold text-xs leading-none;
+	}
 }

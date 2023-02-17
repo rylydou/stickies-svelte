@@ -24,11 +24,13 @@ export type ListData = {
 export type StickyData = {
 	id: ID,
 	title: string,
-	description: 'text',
 
-	parts: Component[],
+	parts: { [key: string]: Part },
 }
 
-export interface Component {
+export type Part = {
+}
 
+export type DescriptionPart = Part & {
+	text: 'text',
 }

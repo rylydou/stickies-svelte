@@ -1,17 +1,18 @@
 <script lang="ts">
-	import { clickOutside } from '$lib/directives/click_outside'
-	import { backOut } from 'svelte/easing'
-	import { scale } from 'svelte/transition'
-	import type { DocData } from '$lib/doc'
+	import type { DescriptionPart, DocData, Part } from '$lib/doc'
+	import code_theme from 'svelte-highlight/styles/base16-monokai'
 
 	let store = svelteSyncedStore(doc_store)
 	$: doc = $store.doc as DocData
 	$: sticky = doc.stickies_by_id[$selected_sticky]
+	$: description_part = sticky.parts['description'] as DescriptionPart
 
-	import { selected_sticky } from './state_store'
-	import { svelteSyncedStore } from '@syncedstore/svelte'
-	import { doc_store } from './store'
 	import Button from '$lib/components/Button.svelte'
+	import { svelteSyncedStore } from '@syncedstore/svelte'
+	import { Highlight, LineNumbers } from 'svelte-highlight'
+	import json from 'svelte-highlight/languages/json'
+	import { selected_sticky } from './state_store'
+	import { doc_store } from './store'
 
 	function click(e: MouseEvent) {
 		const div = e.target as HTMLDivElement
@@ -21,7 +22,29 @@
 	function close() {
 		$selected_sticky = 0
 	}
+
+	function has_part(type: string): boolean {
+		return type in sticky.parts
+	}
+
+	function add_description() {
+		console.log('adding description...')
+		sticky.parts = {
+			...sticky.parts,
+			description: { text: '' as 'text' } as DescriptionPart,
+		}
+
+		// sticky.parts['description'] = { text: '' } as DescriptionPart
+	}
+
+	function get_part<T extends Part>(type: string): T {
+		return sticky.parts[type] as T
+	}
 </script>
+
+<svelte:head>
+	{@html code_theme}
+</svelte:head>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
@@ -57,20 +80,28 @@
 
 			<div class="px-4 py-2 block">
 				<span>Description</span>
-				<textarea
-					class="mt-1 bg-white"
-					rows="4"
-					placeholder="Add a more detailed description..."
-					bind:value={sticky.description}
-				/>
+				{#if description_part}
+					<textarea
+						class="mt-1 bg-white"
+						rows="4"
+						placeholder="Add a more detailed description..."
+						bind:value={sticky.parts.description.text}
+					/>
+				{:else}
+					<Button on:click={add_description}>Add description</Button>
+				{/if}
 			</div>
 		</div>
-		<div
-			class="p-2 pt-3 text-white/40 font-mono text-xs flex gap-8 select-text"
+
+		<br />
+
+		<Highlight
+			language={json}
+			code={JSON.stringify(sticky, null, ' ')}
+			langtag
+			let:highlighted
 		>
-			<span>id: {$selected_sticky}</span>
-			<span>parts: {sticky.parts.length}</span>
-			<span>size: {JSON.stringify(sticky).length}</span>
-		</div>
+			<LineNumbers {highlighted} hideBorder />
+		</Highlight>
 	</div>
 </div>
