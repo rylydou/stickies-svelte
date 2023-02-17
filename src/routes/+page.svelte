@@ -8,6 +8,7 @@
 	import { selected_sticky } from './state_store'
 	import { doc_store, websocket_provider } from './store'
 	import { clickOutside } from '$lib/directives/click_outside'
+	import StickyEditor from './StickyEditor.svelte'
 
 	let store = svelteSyncedStore(doc_store)
 
@@ -76,12 +77,11 @@
 </svelte:head>
 
 <div
-	class="flex flex-col bg-[#0079bf] h-screen w-screen overflow-hidden text-sm text-gray-900"
+	class="flex flex-col bg-[#0079bf] h-screen w-screen overflow-hidden text-sm text-gray-900 font-serif"
 >
-	<div class="flex flex-row items-center p-2 gap-2 bg-black text-white">
+	<div class="flex flex-row items-center p-2 gap-2 bg-white">
 		<Button class="flat" on:click={init_doc}>New Document</Button>
 		<Button class="flat">Config</Button>
-		<div class="fg-red-500 text-fg/50"> Text </div>
 
 		<div class="flex-grow" />
 
@@ -99,7 +99,7 @@
 	</div>
 
 	<div
-		class="w-full h-full flex flex-row items-start gap-2 p-2 overflow-y-hidden overflow-x-scroll"
+		class="w-full h-full flex flex-row items-start gap-2 p-2 overflow-y-hidden overflow-x-auto"
 		bind:this={scroll_view}
 		on:wheel|passive={scroll}
 	>
@@ -110,6 +110,7 @@
 
 			<input
 				type="text"
+				class="bg-gray-200 max-w-36"
 				placeholder="Add a new list..."
 				bind:value={list_title_entry}
 				on:submit={insert}
@@ -126,32 +127,7 @@
 </div>
 
 {#if $selected_sticky != 0}
-	<div
-		class="bg-white absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 min-w-[40em] w-1/3 will-change-transform flex flex-col gap-4 p-4 justify-start rounded-lg shadow-2xl ring ring-gray-900 max-h-[90vh] overflow-y-auto"
-		in:scale={{ duration: 300, easing: backOut, start: 1.1 }}
-		out:scale={{ duration: 200, start: 0.9 }}
-		use:clickOutside
-		on:outclick={(e) => ($selected_sticky = 0)}
-	>
-		<label class="block">
-			<span>Title</span>
-			<input
-				class="mt-1"
-				type="text"
-				bind:value={doc.stickies_by_id[$selected_sticky].title}
-				autofocus
-			/>
-		</label>
-
-		<label class="block">
-			<span>Description</span>
-			<textarea
-				class="mt-1"
-				rows="5"
-				bind:value={doc.stickies_by_id[$selected_sticky].description}
-			/>
-		</label>
-	</div>
+	<StickyEditor />
 {/if}
 
 <style lang="postcss">

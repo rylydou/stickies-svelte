@@ -23,6 +23,7 @@
 			id: id,
 			title: todo_title_entry,
 			description: '',
+			parts: [],
 		}
 
 		doc.stickies_by_id[id] = sticky
@@ -48,6 +49,7 @@
 
 <div
 	class="bg-gray-200 w-80 max-h-full flex-shrink-0 flex flex-col gap-2 rounded"
+	title="id: {list_data.id}"
 >
 	<div class="flex flex-row gap-2 px-2 pt-2">
 		<input class="font-bold flat" type="text" bind:value={list_data.title} />

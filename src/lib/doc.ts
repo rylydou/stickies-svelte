@@ -25,4 +25,10 @@ export type StickyData = {
 	id: ID,
 	title: string,
 	description: 'text',
+
+	parts: Component[],
+}
+
+export interface Component {
+
 }

@@ -11,7 +11,6 @@
 	$: sticky_data = doc.stickies_by_id[id]
 
 	function click() {
-		console.log(`clicked "${sticky_data.title}"#${id}`)
 		selected_sticky.set(id)
 	}
 
@@ -22,7 +21,7 @@
 
 <button
 	class="sticky reset"
-	title="id:{sticky_data.id}"
+	title="id: {sticky_data.id}"
 	on:click={click}
 	in:receive={{ key: 'anim' }}
 	out:send={{ key: 'anim' }}
