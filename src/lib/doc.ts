@@ -24,13 +24,22 @@ export type ListData = {
 export type StickyData = {
 	id: ID,
 	title: string,
+	description: string,
 
-	parts: { [key: string]: Part },
+	parts: Part[],
 }
 
 export type Part = {
+	type: string
 }
 
-export type DescriptionPart = Part & {
-	text: 'text',
+export type ChecklistPart = Part & {
+	type: 'checklist'
+	title: string,
+	items: ChecklistPartItem[],
+}
+
+export type ChecklistPartItem = {
+	title: string,
+	completed: boolean,
 }

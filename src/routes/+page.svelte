@@ -9,6 +9,8 @@
 	import { doc_store, websocket_provider } from './store'
 	import { clickOutside } from '$lib/directives/click_outside'
 	import StickyEditor from './StickyEditor.svelte'
+	import Dropdown from '$lib/components/Dropdown.svelte'
+	import DropdownItem from '$lib/components/DropdownItem.svelte'
 
 	let store = svelteSyncedStore(doc_store)
 
@@ -77,11 +79,16 @@
 </svelte:head>
 
 <div
-	class="flex flex-col bg-[#0079bf] h-screen w-screen overflow-hidden text-sm text-gray-900 font-serif"
+	class="flex flex-col bg-[#0079bf] h-screen w-screen overflow-hidden text-sm text-gray-900"
 >
 	<div class="flex flex-row items-center p-2 gap-2 bg-white">
 		<Button class="flat" on:click={init_doc}>New Document</Button>
-		<Button class="flat">Config</Button>
+		<Button>New</Button>
+		<Dropdown>
+			<DropdownItem>List</DropdownItem>
+			<DropdownItem>Sticky</DropdownItem>
+			<DropdownItem>Checklist</DropdownItem>
+		</Dropdown>
 
 		<div class="flex-grow" />
 
@@ -113,7 +120,6 @@
 				class="bg-gray-200 max-w-36"
 				placeholder="Add a new list..."
 				bind:value={list_title_entry}
-				on:submit={insert}
 				on:keypress={(e) => {
 					if (e.code == 'Enter') insert()
 				}}

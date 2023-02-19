@@ -11,30 +11,50 @@
 }
 
 @layer components {
+	button {
+		appearance: none;
+
+		white-space: nowrap;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: theme(gap.1);
+
+		padding: theme(padding.1) theme(padding.2);
+		border: none;
+		border-radius: theme(borderRadius.DEFAULT);
+		outline: none;
+		text-align: left;
+
+		&.filled {
+			background-color: theme(colors.gray.300);
+		}
+
+		&:hover {
+			/* background-color: theme(colors.gray.300); */
+			box-shadow: inset 0 0 100px rgb(0 0 0 / 0.1);
+		}
+	}
+
 	input:not(.reset),
-	button:not(.reset),
 	select:not(.reset),
 	textarea:not(.reset){
-		@apply
-			appearance-none
-			px-2 py-1
-			bg-white
-			border-none rounded outline-none
-		;
+		appearance: none;
+		padding: theme(padding.1) theme(padding.2);
+		border: none;
+		border-radius: theme(borderRadius.DEFAULT);
+		outline: none;
+		text-align: left;
 	}
 
 	input:not(.reset):disabled,
-	button:not(.reset):disabled,
 	textarea:not(.reset):disabled {
-		@apply opacity-50;
-	}
-
-	button:not(.reset) {
-		@apply font-bold text-center;
+		opacity: theme(opacity.25)
 	}
 
 	select:not(.reset) {
-		@apply pr-8 cursor-pointer;
+		cursor: pointer;
+		padding-right: theme(padding.8);
 	}
 
 	select:not(.reset) {
@@ -48,17 +68,15 @@
 
 	input[type="text"]:not(.reset),
 	textarea:not(.reset) {
-		@apply w-full font-serif;
+		width: theme(width.full);
 	}
 
-	button:not(.reset).flat,
 	input[type="text"]:not(.reset).flat,
 	textarea:not(.reset).flat,
 	select:not(.reset).flat {
-		@apply bg-transparent hover:bg-black/10;
+		background-color: theme(colors.transparent);
 	}
 
-	button:not(.reset),
 	input[type="text"]:not(.reset),
 	textarea:not(.reset),
 	select:not(.reset) {
@@ -71,7 +89,9 @@
 
 	input[type="text"]:not(.reset).prompt {
 		@apply
-			cursor-pointer text-center placeholder:text-current
+			cursor-pointer
+			font-sans
+			placeholder:text-current
 			focus:cursor-text focus:text-left
 		;
 	}
@@ -85,11 +105,23 @@
 		;
 	}
 
-	input[type="checkbox"]:not(.reset) {
+	input[type="checkbox"]:not(.reset, .switch) {
+		@apply
+			cursor-pointer bg-white
+			p-2 w-4 h-4
+			ring-2 ring-gray-300
+			checked:bg-primary-500
+			focus:ring-gray-900
+		;
+
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white' class='w-5 h-5'%3E%3Cpath fill-rule='evenodd' d='M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z' clip-rule='evenodd' /%3E%3C/svg%3E%0A");
+	}
+
+	input[type="checkbox"].switch {
 		@apply
 			p-0 w-8 h-4 relative cursor-pointer
+			bg-white
 			transition-colors duration-75
-
 
 			after:content-[''] after:w-4 after:h-4 after:absolute after:bg-white after:rounded
 			after:ring after:ring-gray-200
@@ -98,10 +130,7 @@
 			focus:after:ring-gray-900
 
 			checked:bg-primary-400
-			checked:after:translate-x-4;
-	}
-
-	code {
-		@apply font-mono font-bold text-xs leading-none;
+			checked:after:translate-x-4
+		;
 	}
 }

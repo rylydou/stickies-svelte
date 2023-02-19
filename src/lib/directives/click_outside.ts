@@ -5,7 +5,6 @@ interface Attributes {
 }
 
 export function clickOutside(node: HTMLElement): ActionReturn<Attributes> {
-
 	const handleClick = event => {
 		if (node && !node.contains(event.target) && !event.defaultPrevented) {
 			node.dispatchEvent(
