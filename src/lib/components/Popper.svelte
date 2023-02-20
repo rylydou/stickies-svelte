@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { createPopper, type Rect } from '@popperjs/core'
-	import classNames from 'classnames'
 	import type { Placement, Instance } from '@popperjs/core'
 	import createEventDispatcher from './createEventDispatcher'
 	import { scale } from 'svelte/transition'
 	import { cubicIn, cubicOut } from 'svelte/easing'
 	export let activeContent: boolean = false
 	export let arrow: boolean = true
-	export let offset: number = 8
+	export let offset: number = 4
 	export let placement: Placement = 'top'
 	export let trigger: 'hover' | 'click' = 'hover'
 	export let triggeredBy: string | undefined = undefined
@@ -19,7 +18,7 @@
 	let clickable: boolean
 	$: clickable = trigger === 'click'
 	$: dispatch('show', triggerEl, open)
-	let triggerEl: Element
+	let triggerEl: HTMLElement
 	let contentEl: HTMLElement
 	let triggerEls: HTMLElement[] = []
 	let popper: Instance
@@ -138,22 +137,22 @@
 {#if open && triggerEl}
 	<div
 		use:init={triggerEl}
-		role="tooltip"
 		tabIndex={activeContent ? -1 : undefined}
 		on:focusin={optional(activeContent, showHandler)}
 		on:focusout={optional(activeContent, hideHandler)}
 		on:mouseenter={optional(activeContent && !clickable, showHandler)}
 		on:mouseleave={optional(activeContent && !clickable, hideHandler)}
 		{...$$restProps}
-		class={classNames('z-10 w-56', $$props.class)}
+		role="menu"
+		class="absolute w-56"
 	>
 		<div
-			class="origin-top-right bg-white shadow rounded"
-			in:scale={{ start: 0.9, duration: 100, easing: cubicOut }}
-			out:scale={{ start: 0.9, duration: 100, easing: cubicIn }}
+			class="content origin-top-right"
+			in:scale={{ start: 0.95, duration: 100, easing: cubicOut }}
+			out:scale={{ start: 0.95, duration: 75, easing: cubicOut }}
 		>
 			<slot />
+			{#if arrow}<div data-popper-arrow class="popper-arrow" />{/if}
 		</div>
-		{#if arrow}<div data-popper-arrow class="tooltip-arrow" />{/if}
 	</div>
 {/if}

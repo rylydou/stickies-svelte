@@ -1,36 +1,22 @@
 <script lang="ts">
-	import classNames from 'classnames'
+	import { setContext } from 'svelte'
+	import { writable } from 'svelte/store'
 	import Popper from './Popper.svelte'
-	export let open: boolean = false
-	export let frameClass: string = ''
+	export let open = false
 	$: {
 		// set default values
 		$$restProps.arrow = $$restProps.arrow ?? false
 		$$restProps.trigger = $$restProps.trigger ?? 'click'
 		$$restProps.placement = $$restProps.placement ?? 'bottom-end'
-		$$restProps.color = $$restProps.color ?? 'dropdown'
-		$$restProps.shadow = $$restProps.shadow ?? true
-		$$restProps.rounded = $$restProps.rounded ?? true
 	}
-	let popoverClass: string
-	$: popoverClass = classNames(
-		'divide-y divide-gray-100 dark:divide-gray-600',
-		frameClass
-	)
+
+	setContext('menu-context', closeMenu)
+
+	function closeMenu() {
+		open = false
+	}
 </script>
 
-<Popper activeContent {...$$restProps} class={popoverClass} on:show bind:open>
-	{#if $$slots.header}
-		<div class="py-1 overflow-hidden rounded-t">
-			<slot name="header" />
-		</div>
-	{/if}
-	<ul class={$$props.class ?? 'p-1'}>
-		<slot />
-	</ul>
-	{#if $$slots.footer}
-		<div class="py-1  overflow-hidden rounded-b">
-			<slot name="footer" />
-		</div>
-	{/if}
+<Popper activeContent {...$$restProps} on:show bind:open>
+	<slot />
 </Popper>

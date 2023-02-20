@@ -133,4 +133,36 @@
 			checked:after:translate-x-4
 		;
 	}
+
+	[role="menu"]>.content {
+		background-color: theme(colors.white);
+		box-shadow: theme(boxShadow.md);
+		border-radius: theme(borderRadius.md);
+		transform-origin: top right;
+		will-change: transform;
+
+		@apply divide-y divide-gray-100 ring-1 ring-black ring-opacity-5 shadow-lg focus:outline-none;
+
+		&,
+		&>[role="group"],
+		&>[role="group"] {
+			display: flex;
+			flex-direction: column;
+		}
+
+		&>[role="group"] {
+			padding: theme(padding.1);
+
+			&>button {
+				padding: theme(padding.2);
+				gap: theme(gap.2);
+				border-radius: theme(borderRadius.md);
+
+				&:hover {
+					background-color: theme(colors.primary.500);
+					box-shadow: none;
+				}
+			}
+		}
+	}
 }
