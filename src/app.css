@@ -106,32 +106,56 @@
 	}
 
 	input[type="checkbox"]:not(.reset, .switch) {
-		@apply
-			cursor-pointer bg-white
-			p-2 w-4 h-4
-			ring-2 ring-gray-300
-			checked:bg-primary-500
-			focus:ring-gray-900
-		;
+		cursor: pointer;
+		background-color: theme(backgroundColor.white);
+		padding: theme(padding.0);
+		width: theme(width.6);
+		height: theme(height.6);
+		background-origin: content-box;
+		background-repeat: no-repeat;
+		background-position: center;
+		/* background-size: 20px 20px; */
+		border: solid theme(borderWidth.2) theme(borderColor.gray.300);
 
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white' class='w-5 h-5'%3E%3Cpath fill-rule='evenodd' d='M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z' clip-rule='evenodd' /%3E%3C/svg%3E%0A");
+		&:checked {
+			background-color: theme(backgroundColor.primary.500);
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor' class='w-5 h-5'%3E%3Cpath fill-rule='evenodd' d='M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z' clip-rule='evenodd' /%3E%3C/svg%3E%0A");
+			border-color: theme(borderColor.primary.500);
+		}
 	}
 
 	input[type="checkbox"].switch {
-		@apply
-			p-0 w-8 h-4 relative cursor-pointer
-			bg-white
-			transition-colors duration-75
+		cursor: pointer;
+		padding: 0;
+		width: theme(width.12);
+		height: theme(height.6);
+		border-radius: theme(borderRadius.full);
+		background-color: theme(backgroundColor.white);
+		position: relative;
+		padding: theme(padding[1]);
 
-			after:content-[''] after:w-4 after:h-4 after:absolute after:bg-white after:rounded
-			after:ring after:ring-gray-200
-			after:transition-transform after:duration-75
+		&::after {
+			position: absolute;
+			content: '';
+			width: theme(width.4);
+			height: theme(height.4);
+			background-color: theme(backgroundColor.gray.400);
+			border-radius: theme(borderRadius.full);
+			border: solid 3px theme(borderColor.white);
 
-			focus:after:ring-gray-900
+			transition: translate 100ms;
+		}
 
-			checked:bg-primary-400
-			checked:after:translate-x-4
-		;
+		&:checked {
+			background-color: theme(colors.primary.500);
+
+			&::after {
+				translate: theme(translate.6) 0;
+				background-color: theme(backgroundColor.white);
+
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor' class='w-5 h-5'%3E%3Cpath fill-rule='evenodd' d='M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z' clip-rule='evenodd' /%3E%3C/svg%3E%0A");
+			}
+		}
 	}
 
 	[role="menu"]>.content {

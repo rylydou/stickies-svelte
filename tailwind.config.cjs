@@ -15,6 +15,9 @@ module.exports = {
 			colors: {
 				primary: colors.amber,
 			},
+			screens: {
+				'2md': '864px'
+			}
 		},
 	},
 	plugins: [],

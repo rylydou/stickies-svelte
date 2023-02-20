@@ -13,7 +13,7 @@
 	}
 
 	let progress_tweened = tweened(progress_raw, {
-		duration: 400,
+		duration: 1000,
 		easing: cubicOut,
 	})
 </script>
@@ -30,14 +30,16 @@
 	</div>
 	<div class="progressbar-track w-full h-1 overflow-clip">
 		<div
-			class="progressbar-fill h-full will-change-transform"
+			class="progressbar-fill h-full border-r-2 border-r-primary-600 will-change-transform"
 			style="width: {$progress_tweened * 100}%;"
 		/>
 	</div>
 	<div
-		class="progressbar-label w-11 tabular-nums text-xs text-right text-gray-600 will-change-contents"
+		class="progressbar-label w-11 tabular-nums text-xs text-right text-gray-600"
 	>
-		<span class="font-bold text-gray-800">{value}</span>/{max}
+		<span class="font-bold text-gray-800">{value}</span>/<span
+			class="text-gray-400">{max}</span
+		>
 	</div>
 </div>
 

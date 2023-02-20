@@ -11,25 +11,13 @@
 	import { svelteSyncedStore } from '@syncedstore/svelte'
 	import { Highlight, LineNumbers } from 'svelte-highlight'
 	import json from 'svelte-highlight/languages/json'
-	import { cubicOut } from 'svelte/easing'
-	import { scale } from 'svelte/transition'
+	import { cubicOut, linear } from 'svelte/easing'
+	import { fade, scale } from 'svelte/transition'
 	import ChecklistPartView from './ChecklistPartView.svelte'
 	import { selected_sticky } from './state_store'
 	import { doc_store } from './store'
-	import {
-		Menu,
-		MenuButton,
-		MenuItems,
-		MenuItem,
-		Transition,
-	} from '@rgossiaux/svelte-headlessui'
 	import Dropdown from '$lib/components/Dropdown.svelte'
 	import DropdownItem from '$lib/components/DropdownItem.svelte'
-
-	function click(e: MouseEvent) {
-		const div = e.target as HTMLDivElement
-		if (div.dataset.background) close()
-	}
 
 	function close() {
 		$selected_sticky = 0
@@ -53,25 +41,34 @@
 	let show_json = false
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- Wrapper -->
 <div
 	data-background={true}
-	class="absolute left-0 top-0 w-full h-full max-h-full md:py-8 bg-black/50 overflow-y-auto md:backdrop-blur-md md:backdrop-saturate-50 md:backdrop-brightness-50 text-sm"
-	on:click={click}
+	class="absolute left-0 top-0 w-full h-full max-h-full md:py-8 overflow-y-auto text-sm"
 >
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- Backdrop -->
+	<div
+		class="fixed top-0 left-0 bottom-0 right-0 md:bg-black/75 md:backdrop-grayscale md:backdrop-blur-sm will-change-transform"
+		in:fade={{ duration: 300, easing: cubicOut }}
+		out:fade={{ duration: 200, easing: cubicOut }}
+		on:click={close}
+	/>
+	<!-- Window -->
 	<div class="mx-auto max-w-screen-md">
 		<div
-			class="bg-gray-200 md:rounded h-screen md:h-fit shadow-2xl relative overflow-clip"
+			class="bg-gray-200 md:rounded-lg min-h-screen md:min-h-0 shadow-2xl relative"
 			in:scale={{ start: 0.9, duration: 300, easing: cubicOut }}
+			out:scale={{ start: 0.9, duration: 200, easing: cubicOut }}
 		>
 			{#if $selected_sticky != 0}
 				<!-- Header -->
 				<div
-					class="p-2 flex flex-row items-stretch gap-2 sticky top-0 md:-top-8 bg-gray-200 z-10 shadow"
+					class="p-2 flex flex-row items-stretch gap-2 sticky top-0 md:-top-8 bg-white z-50 border-b-2 border-b-gray-200 md:rounded-t-lg"
 				>
 					<!-- class="bg-red-500 text-white md:bg-transparent md:text-current" -->
 					<Button
-						class="bg-gray-300 md:bg-transparent md:hidden"
+						class="bg-gray-200 md:bg-transparent 2md:hidden"
 						on:click={close}
 					>
 						<svg
@@ -107,7 +104,9 @@
 								<Icon src={Icons.Tag} theme="mini" size="20px" />
 								<div class="block">
 									<span class="font-bold">Tag</span>
-									<p class="whitespace-pre-wrap">Add a tag to this sticky</p>
+									<p class="whitespace-pre-wrap opacity-50"
+										>Add a tag to this sticky</p
+									>
 								</div>
 							</DropdownItem>
 						</div>
@@ -116,7 +115,9 @@
 								<Icon src={Icons.ListBullet} theme="mini" size="20px" />
 								<div class="block">
 									<span class="font-bold">Checklist</span>
-									<p class="whitespace-pre-wrap">A checklist of tasks</p>
+									<p class="whitespace-pre-wrap opacity-50"
+										>A checklist of tasks</p
+									>
 								</div>
 							</DropdownItem>
 							<DropdownItem>

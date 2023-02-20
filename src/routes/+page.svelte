@@ -2,15 +2,10 @@
 	import Button from '$lib/components/Button.svelte'
 	import type { DocData, ListData } from '$lib/doc'
 	import { svelteSyncedStore } from '@syncedstore/svelte'
-	import { fly, scale } from 'svelte/transition'
-	import { cubicIn, backOut, sineOut, cubicOut } from 'svelte/easing'
 	import ListView from './ListView.svelte'
 	import { selected_sticky } from './state_store'
 	import { doc_store, websocket_provider } from './store'
-	import { clickOutside } from '$lib/directives/click_outside'
 	import StickyEditor from './StickyEditor.svelte'
-	import Dropdown from '$lib/components/Dropdown.svelte'
-	import DropdownItem from '$lib/components/DropdownItem.svelte'
 
 	let store = svelteSyncedStore(doc_store)
 
@@ -82,26 +77,23 @@
 	class="flex flex-col bg-[#0079bf] h-screen w-screen overflow-hidden text-sm text-gray-900"
 >
 	<div class="flex flex-row items-center p-2 gap-2 bg-white">
-		<Button class="flat" on:click={init_doc}>New Document</Button>
-		<Button>New</Button>
-		<Dropdown>
-			<DropdownItem>List</DropdownItem>
-			<DropdownItem>Sticky</DropdownItem>
-			<DropdownItem>Checklist</DropdownItem>
-		</Dropdown>
+		<Button on:click={init_doc}>New</Button>
 
 		<div class="flex-grow" />
 
 		{#if ws_connecting}
-			<Button class="flat" disabled={true}>Connecting...</Button>
+			<Button disabled={true}>Connecting...</Button>
 		{:else if ws_connected}
-			<Button class="flat" on:click={(e) => websocket_provider.disconnect()}
-				>Disconnect</Button
-			>
+			<Button on:click={(e) => websocket_provider.disconnect()}>
+				Disconnect
+			</Button>
 		{:else}
-			<Button class="flat" on:click={(e) => websocket_provider.connect()}
-				>Connect</Button
+			<Button
+				class="bg-primary-500"
+				on:click={(e) => websocket_provider.connect()}
 			>
+				Connect
+			</Button>
 		{/if}
 	</div>
 
