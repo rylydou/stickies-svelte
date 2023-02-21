@@ -3,5 +3,5 @@
 </script>
 
 <button on:click class:filled {...$$restProps}>
-	<slot>~Button~</slot>
+	<slot />
 </button>

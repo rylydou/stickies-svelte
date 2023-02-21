@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ChecklistPart, DocData } from '$lib/doc'
+	import type { ChecklistPart, DocData, ID, LabelData } from '$lib/doc'
 
 	let store = svelteSyncedStore(doc_store)
 	$: doc = $store.doc as DocData
@@ -18,6 +18,9 @@
 	import { doc_store } from './store'
 	import Dropdown from '$lib/components/Dropdown.svelte'
 	import DropdownItem from '$lib/components/DropdownItem.svelte'
+	import { contrast_color } from '$lib/contrast'
+	import Label from '$lib/components/Label.svelte'
+	import ColorInput from '$lib/components/ColorInput.svelte'
 
 	function close() {
 		$selected_sticky = 0
@@ -34,6 +37,22 @@
 		sticky.parts.push(checklist)
 	}
 
+	let new_label_entry = ''
+	let new_label_color = '#ff0000'
+	function add_label() {
+		let name = new_label_entry
+		if (name.trim().length == 0) name = 'New label'
+		new_label_entry = ''
+
+		const id = doc.next_id++
+		const label: LabelData = {
+			id,
+			color: new_label_color,
+			name,
+		}
+		doc.labels_by_id[id] = label
+	}
+
 	const parts_lut: { [key: string]: ConstructorOfATypedSvelteComponent } = {
 		checklist: ChecklistPartView,
 	}
@@ -45,6 +64,7 @@
 <div
 	data-background={true}
 	class="absolute left-0 top-0 w-full h-full max-h-full md:py-8 overflow-y-auto text-sm"
+	style="pointer-events: {$selected_sticky == 0 ? 'none' : 'all'};"
 >
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- Backdrop -->
@@ -71,20 +91,7 @@
 						class="bg-gray-200 md:bg-transparent 2md:hidden"
 						on:click={close}
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke-width="1.5"
-							stroke="currentColor"
-							class="w-6 h-6"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M6 18L18 6M6 6l12 12"
-							/>
-						</svg>
+						<Icon src={Icons.XMark} size="24px" />
 					</Button>
 
 					<input
@@ -98,7 +105,7 @@
 						<Icon src={Icons.Plus} theme="mini" size="20px" />
 						Add part
 					</Button>
-					<Dropdown>
+					<Dropdown placement="bottom-end">
 						<div role="group">
 							<DropdownItem>
 								<Icon src={Icons.Tag} theme="mini" size="20px" />
@@ -138,46 +145,75 @@
 					</Dropdown>
 				</div>
 
-				<div class="flex flex-row">
-					<!-- Content -->
-					<div class="w-full p-4 flex flex-col gap-4">
-						<!-- Description -->
-						<div class="block">
-							<span>Description</span>
-							<textarea
-								class="mt-1 bg-white"
-								rows="4"
-								placeholder="Add a more detailed description..."
-								bind:value={sticky.description}
-								spellcheck={false}
-							/>
-						</div>
-
-						<!-- Parts -->
-						{#each sticky.parts as part}
-							<svelte:component this={parts_lut[part.type]} {part} />
+				<!-- Content -->
+				<div class="w-full p-4 flex flex-col gap-4">
+					<!-- Labels -->
+					<div class="flex flex-row gap-1 flex-wrap z-20">
+						{#each sticky.labels as label_id (label_id)}
+							{@const label = doc.labels_by_id[label_id]}
+							<Label
+								color={label.color}
+								on:click={(e) =>
+									sticky.labels.splice(sticky.labels.indexOf(label_id))}
+							>
+								{label.name}
+							</Label>
 						{/each}
+						<Button>
+							<Icon src={Icons.PlusSmall} size="20px" theme="mini" />
+						</Button>
+						<Dropdown placement="bottom-start">
+							<div role="group" class="gap-1 flex !flex-row flex-wrap">
+								{#each Object.values(doc.labels_by_id).filter((label) => !sticky.labels.includes(label.id)) as label (label.id)}
+									<Label
+										class="w-fit !py-1 font-bold"
+										on:click={(e) => sticky.labels.push(label.id)}
+										style="background-color: {label.color}; color: {contrast_color(
+											label.color
+										)};"
+									>
+										{label.name}
+									</Label>
+								{:else}
+									<span class="italic opacity-50 p-2">
+										No {#if sticky.labels.length > 0}more{/if} labels...
+									</span>
+								{/each}
+							</div>
+							<div role="group">
+								<span class="p-1 font-bold text-xs">Create a new label:</span>
+								<Label color={new_label_color}>
+									<!-- <input type="color" bind:value={new_label_color} /> -->
+									<ColorInput bind:color={new_label_color} />
+									<input
+										class="superflat"
+										type="text"
+										placeholder="Label name..."
+										bind:value={new_label_entry}
+										on:keypress={(e) => {
+											if (e.code == 'Enter') add_label()
+										}}
+									/>
+								</Label>
+							</div>
+						</Dropdown>
+					</div>
+					<!-- Description -->
+					<div class="block">
+						<span>Description</span>
+						<textarea
+							class="mt-1 bg-white"
+							rows="4"
+							placeholder="Add a more detailed description..."
+							bind:value={sticky.description}
+							spellcheck={false}
+						/>
 					</div>
 
-					<!-- Sidebar -->
-					<!-- <div class="w-72 p-4 pl-2 flex flex-col gap-1 hidden">
-					<div class="text-xs font-bold"> Add to sticky </div>
-					<Button on:click={add_checklist} filled>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 20 20"
-							fill="currentColor"
-							class="w-5 h-5"
-						>
-							<path
-								fill-rule="evenodd"
-								d="M6 4.75A.75.75 0 016.75 4h10.5a.75.75 0 010 1.5H6.75A.75.75 0 016 4.75zM6 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H6.75A.75.75 0 016 10zm0 5.25a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H6.75a.75.75 0 01-.75-.75zM1.99 4.75a1 1 0 011-1H3a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1v-.01zM1.99 15.25a1 1 0 011-1H3a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1v-.01zM1.99 10a1 1 0 011-1H3a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1V10z"
-								clip-rule="evenodd"
-							/>
-						</svg>
-						Checklist
-					</Button>
-				</div> -->
+					<!-- Parts -->
+					{#each sticky.parts as part}
+						<svelte:component this={parts_lut[part.type]} {part} />
+					{/each}
 				</div>
 
 				<label class="flex flex-row gap-2 items-center p-4">

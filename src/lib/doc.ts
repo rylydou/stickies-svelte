@@ -9,6 +9,8 @@ export type DocData = {
 
 	stickies_by_id: { [key: ID]: StickyData }
 
+	labels_by_id: { [key: ID]: LabelData }
+
 	next_id: ID,
 	// used_uuids: Set<UUID>
 	// unused_uuids: UUID[]
@@ -25,8 +27,15 @@ export type StickyData = {
 	id: ID,
 	title: string,
 	description: string,
+	labels: ID[],
 
 	parts: Part[],
+}
+
+export type LabelData = {
+	id: ID,
+	name: string,
+	color: string,
 }
 
 export type Part = {

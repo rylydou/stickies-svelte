@@ -6,6 +6,8 @@
 	import { selected_sticky } from './state_store'
 	import { doc_store, websocket_provider } from './store'
 	import StickyEditor from './StickyEditor.svelte'
+	import Dropdown from '$lib/components/Dropdown.svelte'
+	import ColorPicker from '$lib/components/ColorPicker.svelte'
 
 	let store = svelteSyncedStore(doc_store)
 
@@ -39,6 +41,7 @@
 		doc.lists_order = []
 
 		doc.stickies_by_id = {}
+		doc.labels_by_id = {}
 
 		doc.next_id = 1
 	}
@@ -78,6 +81,13 @@
 >
 	<div class="flex flex-row items-center p-2 gap-2 bg-white">
 		<Button on:click={init_doc}>New</Button>
+
+		<Button>Color</Button>
+		<Dropdown>
+			<ColorPicker />
+		</Dropdown>
+
+		<input type="checkbox" />
 
 		<div class="flex-grow" />
 
@@ -130,10 +140,6 @@
 
 <style lang="postcss">
 	:global(html) {
-		@apply select-none;
-	}
-
-	:global(::selection) {
-		@apply bg-primary-300;
+		user-select: none;
 	}
 </style>

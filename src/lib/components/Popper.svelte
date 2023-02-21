@@ -144,10 +144,10 @@
 		on:mouseleave={optional(activeContent && !clickable, hideHandler)}
 		{...$$restProps}
 		role="menu"
-		class="absolute w-56"
+		class="absolute w-64"
 	>
 		<div
-			class="content origin-top-right"
+			class="content origin-top-right max-h-96"
 			in:scale={{ start: 0.95, duration: 100, easing: cubicOut }}
 			out:scale={{ start: 0.95, duration: 75, easing: cubicOut }}
 		>

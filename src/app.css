@@ -11,6 +11,15 @@
 }
 
 @layer components {
+	:disabled {
+		opacity: theme(opacity.25);
+	}
+
+	/* :focus-visible {
+		outline: solid 2px theme(outlineColor.blue.500) !important;
+		outline-offset: 2px !important;
+	} */
+
 	button {
 		appearance: none;
 
@@ -22,7 +31,7 @@
 
 		padding: theme(padding.1) theme(padding.2);
 		border: none;
-		border-radius: theme(borderRadius.DEFAULT);
+		border-radius: theme(borderRadius.md);
 		outline: none;
 		text-align: left;
 
@@ -38,18 +47,13 @@
 
 	input:not(.reset),
 	select:not(.reset),
-	textarea:not(.reset){
+	textarea:not(.reset) {
 		appearance: none;
 		padding: theme(padding.1) theme(padding.2);
 		border: none;
-		border-radius: theme(borderRadius.DEFAULT);
+		border-radius: theme(borderRadius.md);
 		outline: none;
 		text-align: left;
-	}
-
-	input:not(.reset):disabled,
-	textarea:not(.reset):disabled {
-		opacity: theme(opacity.25)
 	}
 
 	select:not(.reset) {
@@ -66,61 +70,103 @@
 		padding-right: theme(spacing.10);
 	}
 
-	input[type="text"]:not(.reset),
+	input[type="text"],
+	input[type="url"],
+	input[type="email"],
+	input[type="password"],
+	input[type="number"],
+	input[type="tel"],
+	input[type="search"],
+	textarea {
+		&:not(.reset) {
+			width: theme(width.full);
+
+			&::placeholder {
+				color: currentColor;
+				opacity: 0.5;
+			}
+
+			&:focus {
+				background-color: theme(backgroundColor.white);
+				@apply ring ring-current;
+			}
+
+			&.flat {
+				background-color: transparent;
+
+				&:focus {
+					background-color: theme(backgroundColor.white);
+				}
+			}
+
+			&.superflat {
+				background-color: transparent !important;
+			}
+
+			&.prompt {
+				cursor: pointer;
+
+				&::placeholder {
+					opacity: 1;
+				}
+
+				&:focus {
+					cursor: text;
+				}
+			}
+		}
+	}
+
 	textarea:not(.reset) {
-		width: theme(width.full);
+		padding: theme(padding.2);
+		min-height: 2.5rem;
 	}
 
-	input[type="text"]:not(.reset).flat,
-	textarea:not(.reset).flat,
-	select:not(.reset).flat {
-		background-color: theme(colors.transparent);
-	}
-
-	input[type="text"]:not(.reset),
-	textarea:not(.reset),
-	select:not(.reset) {
-		@apply focus:bg-white focus:hover:bg-white focus:ring focus:ring-gray-900;
-	}
-
-	textarea:not(.reset) {
-		@apply p-2 min-h-[2.5em];
-	}
-
-	input[type="text"]:not(.reset).prompt {
-		@apply
-			cursor-pointer
-			font-sans
-			placeholder:text-current
-			focus:cursor-text focus:text-left
-		;
-	}
-
-	input[type="radio"]:not(.reset) {
-		@apply
-			p-0 w-4 h-4 cursor-pointer
-			checked:bg-primary-400
-			focus:ring focus:ring-gray-900
-			rounded-full
-		;
+	input[type="color"] {
+		padding: 0;
+		width: theme(width.12);
+		height: theme(height.6);
+		border: solid 4px currentColor;
 	}
 
 	input[type="checkbox"]:not(.reset, .switch) {
 		cursor: pointer;
-		background-color: theme(backgroundColor.white);
+		background: radial theme(backgroundColor.white);
 		padding: theme(padding.0);
 		width: theme(width.6);
 		height: theme(height.6);
-		background-origin: content-box;
+		background-color: white;
+		background-image: radial-gradient(ellipse at center, theme(backgroundColor.primary.500) 0%, theme(backgroundColor.primary.500) 50%, theme(backgroundColor.white) 50%);
+		background-size: 0% 0%;
 		background-repeat: no-repeat;
 		background-position: center;
-		/* background-size: 20px 20px; */
-		border: solid theme(borderWidth.2) theme(borderColor.gray.300);
+		transition: background-size theme(transitionDuration.75);
+
+		border: solid theme(borderWidth.2) theme(borderColor.gray.500);
+		position: relative;
+
+		&::after {
+			content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor' class='w-5 h-5'%3E%3Cpath fill-rule='evenodd' d='M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z' clip-rule='evenodd' /%3E%3C/svg%3E%0A");
+			width: 20px;
+			height: 20px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			scale: 0;
+			opacity: 0;
+			transition: scale theme(transitionDuration.200) theme(transitionTimingFunction.out-back), opacity theme(transitionDuration.200);
+			will-change: transform;
+		}
 
 		&:checked {
-			background-color: theme(backgroundColor.primary.500);
-			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor' class='w-5 h-5'%3E%3Cpath fill-rule='evenodd' d='M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z' clip-rule='evenodd' /%3E%3C/svg%3E%0A");
 			border-color: theme(borderColor.primary.500);
+			background-size: 200% 200%;
+			transition: background-size theme(transitionDuration.100) ease-out;
+
+			&::after {
+				scale: 1;
+				opacity: 1;
+			}
 		}
 	}
 
@@ -181,11 +227,6 @@
 				padding: theme(padding.2);
 				gap: theme(gap.2);
 				border-radius: theme(borderRadius.md);
-
-				&:hover {
-					background-color: theme(colors.primary.500);
-					box-shadow: none;
-				}
 			}
 		}
 	}

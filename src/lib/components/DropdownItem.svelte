@@ -4,10 +4,9 @@
 	export let href: string | undefined = undefined
 	export let autoclose = true
 
-	const dispatch = createEventDispatcher()
-
 	const closeMenu = getContext<{ (): void }>('menu-context')
 
+	const dispatch = createEventDispatcher<{ click: MouseEvent }>()
 	function click(e: MouseEvent) {
 		if (autoclose) {
 			closeMenu()

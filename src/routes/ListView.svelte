@@ -24,6 +24,7 @@
 			title: todo_title_entry,
 			description: '',
 			parts: [],
+			labels: [],
 		}
 
 		doc.stickies_by_id[id] = sticky

@@ -1,14 +1,11 @@
 <script lang="ts">
+	import type { Placement } from '@popperjs/core'
 	import { setContext } from 'svelte'
-	import { writable } from 'svelte/store'
 	import Popper from './Popper.svelte'
 	export let open = false
-	$: {
-		// set default values
-		$$restProps.arrow = $$restProps.arrow ?? false
-		$$restProps.trigger = $$restProps.trigger ?? 'click'
-		$$restProps.placement = $$restProps.placement ?? 'bottom-end'
-	}
+	export let placement: Placement = 'bottom'
+	export let trigger: 'hover' | 'click' = 'click'
+	export let arrow = false
 
 	setContext('menu-context', closeMenu)
 
@@ -17,6 +14,14 @@
 	}
 </script>
 
-<Popper activeContent {...$$restProps} on:show bind:open>
+<Popper
+	activeContent
+	{placement}
+	{trigger}
+	{arrow}
+	{...$$restProps}
+	on:show
+	bind:open
+>
 	<slot />
 </Popper>
