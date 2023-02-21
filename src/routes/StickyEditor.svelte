@@ -38,7 +38,7 @@
 	}
 
 	let new_label_entry = ''
-	let new_label_color = '#ff0000'
+	let new_label_color = '#eab308'
 	function add_label() {
 		let name = new_label_entry
 		if (name.trim().length == 0) name = 'New label'
@@ -63,7 +63,7 @@
 <!-- Wrapper -->
 <div
 	data-background={true}
-	class="absolute left-0 top-0 w-full h-full max-h-full md:py-8 overflow-y-auto text-sm"
+	class="absolute left-0 top-0 w-full h-full max-h-full md:py-8 overflow-y-auto text-sm z-10"
 	style="pointer-events: {$selected_sticky == 0 ? 'none' : 'all'};"
 >
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -175,20 +175,18 @@
 										{label.name}
 									</Label>
 								{:else}
-									<span class="italic opacity-50 p-2">
+									<span class="opacity-50 px-2 py-1">
 										No {#if sticky.labels.length > 0}more{/if} labels...
 									</span>
 								{/each}
 							</div>
 							<div role="group">
-								<span class="p-1 font-bold text-xs">Create a new label:</span>
 								<Label color={new_label_color}>
-									<!-- <input type="color" bind:value={new_label_color} /> -->
 									<ColorInput bind:color={new_label_color} />
 									<input
 										class="superflat"
 										type="text"
-										placeholder="Label name..."
+										placeholder="Create a new label..."
 										bind:value={new_label_entry}
 										on:keypress={(e) => {
 											if (e.code == 'Enter') add_label()

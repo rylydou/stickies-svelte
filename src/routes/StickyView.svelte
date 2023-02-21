@@ -27,17 +27,19 @@
 	in:receive={{ key: 'anim' }}
 	out:send={{ key: 'anim' }}
 >
-	<div class="p-2 pb-1 whitespace-pre-wrap">
+	<div class="whitespace-pre-wrap">
 		{sticky.title}
 	</div>
-	<div class="flex flex-row flex-wrap gap-1 p-2 pt-0">
-		{#each sticky.labels as label_id (label_id)}
-			{@const label = doc.labels_by_id[label_id]}
-			<Label color={label.color}>
-				{label.name}
-			</Label>
-		{/each}
-	</div>
+	{#if sticky.labels.length > 0}
+		<div class="flex flex-row flex-wrap gap-1">
+			{#each sticky.labels as label_id (label_id)}
+				{@const label = doc.labels_by_id[label_id]}
+				<Label color={label.color}>
+					{label.name}
+				</Label>
+			{/each}
+		</div>
+	{/if}
 </button>
 
 <style lang="postcss">
@@ -46,7 +48,8 @@
 		flex-direction: column;
 		justify-content: start;
 		align-items: flex-start;
-		padding: 0;
+		padding: theme(padding.2);
+		gap: theme(gap.2);
 		background-color: theme(backgroundColor.white);
 		text-align: left;
 		box-shadow: 0 1px hsla(0 0% 0% / 0.1);

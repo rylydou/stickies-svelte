@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { onMount, createEventDispatcher } from 'svelte'
 	import { createPopper, type Rect } from '@popperjs/core'
 	import type { Placement, Instance } from '@popperjs/core'
-	import createEventDispatcher from './createEventDispatcher'
+	// import createEventDispatcher from './createEventDispatcher'
 	import { scale } from 'svelte/transition'
 	import { cubicIn, cubicOut } from 'svelte/easing'
 	export let activeContent: boolean = false
@@ -14,10 +14,12 @@
 	export let strategy: 'absolute' | 'fixed' = 'absolute'
 	export let open: boolean = false
 	export let yOnly: boolean = false
-	const dispatch = createEventDispatcher()
+	const dispatch = createEventDispatcher<{
+		show: { triggerEl: Element; open: boolean }
+	}>()
 	let clickable: boolean
 	$: clickable = trigger === 'click'
-	$: dispatch('show', triggerEl, open)
+	$: dispatch('show', { triggerEl, open })
 	let triggerEl: HTMLElement
 	let contentEl: HTMLElement
 	let triggerEls: HTMLElement[] = []
@@ -142,9 +144,9 @@
 		on:focusout={optional(activeContent, hideHandler)}
 		on:mouseenter={optional(activeContent && !clickable, showHandler)}
 		on:mouseleave={optional(activeContent && !clickable, hideHandler)}
-		{...$$restProps}
 		role="menu"
-		class="absolute w-64"
+		class="absolute font-normal text-sm text-gray-900 cursor-auto"
+		{...$$restProps}
 	>
 		<div
 			class="content origin-top-right max-h-96"

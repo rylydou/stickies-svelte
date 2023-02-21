@@ -14,6 +14,7 @@ module.exports = {
 		extend: {
 			colors: {
 				primary: colors.amber,
+				gray: colors.gray,
 			},
 			screens: {
 				'2md': '864px'

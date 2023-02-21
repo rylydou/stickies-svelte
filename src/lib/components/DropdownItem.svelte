@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { createEventDispatcher, getContext } from 'svelte'
-	import Wrapper from './Wrapper.svelte'
 	export let href: string | undefined = undefined
 	export let autoclose = true
 

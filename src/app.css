@@ -79,6 +79,8 @@
 	input[type="search"],
 	textarea {
 		&:not(.reset) {
+			display: flex;
+			align-items: center;
 			width: theme(width.full);
 
 			&::placeholder {
@@ -88,7 +90,7 @@
 
 			&:focus {
 				background-color: theme(backgroundColor.white);
-				@apply ring ring-current;
+				@apply ring ring-gray-900;
 			}
 
 			&.flat {
@@ -142,7 +144,7 @@
 		background-position: center;
 		transition: background-size theme(transitionDuration.75);
 
-		border: solid theme(borderWidth.2) theme(borderColor.gray.500);
+		border: solid theme(borderWidth.2) theme(borderColor.gray.400);
 		position: relative;
 
 		&::after {

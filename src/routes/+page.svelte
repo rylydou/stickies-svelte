@@ -8,6 +8,8 @@
 	import StickyEditor from './StickyEditor.svelte'
 	import Dropdown from '$lib/components/Dropdown.svelte'
 	import ColorPicker from '$lib/components/ColorPicker.svelte'
+	import Dialog from '$lib/components/Dialog.svelte'
+	import DropdownItem from '$lib/components/DropdownItem.svelte'
 
 	let store = svelteSyncedStore(doc_store)
 
@@ -79,8 +81,20 @@
 <div
 	class="flex flex-col bg-[#0079bf] h-screen w-screen overflow-hidden text-sm text-gray-900"
 >
-	<div class="flex flex-row items-center p-2 gap-2 bg-white">
-		<Button on:click={init_doc}>New</Button>
+	<div class="flex flex-row items-center p-2 gap-1 bg-white z-10">
+		<Button>New</Button>
+		<Dropdown>
+			<div role="group">
+				<Button>Are you sure?</Button>
+				<Dropdown placement="right">
+					<div role="group">
+						<DropdownItem on:click={init_doc}>
+							Are your super duper sure?
+						</DropdownItem>
+					</div>
+				</Dropdown>
+			</div>
+		</Dropdown>
 
 		<Button>Color</Button>
 		<Dropdown>
