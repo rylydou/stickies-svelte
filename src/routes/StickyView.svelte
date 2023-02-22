@@ -54,7 +54,11 @@
 		<div class="flex flex-row flex-wrap gap-1">
 			{#each sticky.labels as label_id (label_id)}
 				{@const label = doc.labels[label_id]}
-				<Label color={colord(label.color)} class="px-1 py-0 text-xs rounded">
+				<Label
+					color={colord(label.color)}
+					class="px-1 py-0 text-xs rounded"
+					title={label.name}
+				>
 					{acronym(label.name)}
 				</Label>
 			{/each}
