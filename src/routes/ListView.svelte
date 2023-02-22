@@ -1,15 +1,13 @@
 <script lang="ts">
-	import type { DocData, StickyData, ID, WrappedID } from '$lib/doc'
+	import type { DocData, StickyData, ID } from '$lib/doc'
 
-	import { dndzone, type DndEvent } from 'svelte-dnd-action'
 	import StickyView from './StickyView.svelte'
-	import type { CrossfadeParams, TransitionConfig } from 'svelte/transition'
 
 	export let doc: DocData
 	export let list_id: ID
 
-	$: list_data = doc.lists_by_id[list_id]
-	$: sticky_ids = list_data.sticky_uuids
+	$: list_data = doc.lists[list_id]
+	$: sticky_ids = list_data.stickies
 
 	let todo_title_entry = ''
 	function insert() {
@@ -27,24 +25,10 @@
 			labels: [],
 		}
 
-		doc.stickies_by_id[id] = sticky
-		list_data.sticky_uuids.push({ id })
+		doc.stickies[id] = sticky
+		list_data.stickies.push(id)
 
 		todo_title_entry = ''
-	}
-
-	function handle_consider(e: CustomEvent<DndEvent<WrappedID>>) {
-		console.log('consider: ', e.detail.info, e.detail.items)
-		handleSort(e)
-	}
-
-	function handle_finalize(e: CustomEvent<DndEvent<WrappedID>>) {
-		console.log('final: ', e.detail.info, e.detail.items)
-		handleSort(e)
-	}
-
-	function handleSort(e: CustomEvent<DndEvent<WrappedID>>) {
-		sticky_ids = e.detail.items
 	}
 </script>
 
@@ -55,13 +39,8 @@
 	<div class="flex flex-row gap-2 px-2 pt-2">
 		<input class="font-bold flat" type="text" bind:value={list_data.title} />
 	</div>
-	<div
-		class="px-2 flex flex-col gap-2 overflow-y-auto"
-		use:dndzone={{ items: sticky_ids, dragDisabled: true }}
-		on:consider={handle_consider}
-		on:finalize={handle_finalize}
-	>
-		{#each sticky_ids as { id } (id)}
+	<div class="px-2 flex flex-col gap-2 overflow-y-auto">
+		{#each sticky_ids as id (id)}
 			{#if id}
 				<!-- <div class="sticky">
 					{doc_data.stickies_by_id[id].title}

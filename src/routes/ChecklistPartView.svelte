@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ProgressBar from '$lib/components/ProgressBar.svelte'
 	import type { ChecklistPart } from '$lib/doc'
-	import { Icon } from '@steeze-ui/svelte-icon'
+	import Icon from '$lib/components/Icon.svelte'
 	import * as Icons from '@steeze-ui/heroicons'
 	import Button from '$lib/components/Button.svelte'
 	import { fade, slide } from 'svelte/transition'
@@ -25,7 +25,7 @@
 <div>
 	<div class="sticky top-4 bg-gray-200 py-2 z-10">
 		<div class="flex flex-row gap-2 items-center pb-1">
-			<Icon src={Icons.ListBullet} size="24px" class="flex-shrink-0" />
+			<Icon src={Icons.ListBullet} big class="flex-shrink-0" />
 
 			<input class="flat font-bold" type="text" bind:value={part.title} />
 

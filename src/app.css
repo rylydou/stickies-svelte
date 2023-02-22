@@ -20,6 +20,17 @@
 		outline-offset: 2px !important;
 	} */
 
+	a {
+		text-decoration: underline;
+		color: theme(colors.sky.600);
+
+		&[target="_blank"]:after {
+			position: absolute;
+			translate: 4px 2px;
+			content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16'%3E%3Cpath d='M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z'%3E%3C/path%3E%3C/svg%3E");
+		}
+	}
+
 	button {
 		appearance: none;
 
@@ -27,13 +38,16 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: theme(gap.1);
+		gap: theme(gap.2);
 
 		padding: theme(padding.1) theme(padding.2);
-		border: none;
 		border-radius: theme(borderRadius.md);
 		outline: none;
 		text-align: left;
+
+		&.fat {
+			padding: theme(padding.2);
+		}
 
 		&.filled {
 			background-color: theme(colors.gray.300);
@@ -50,7 +64,6 @@
 	textarea:not(.reset) {
 		appearance: none;
 		padding: theme(padding.1) theme(padding.2);
-		border: none;
 		border-radius: theme(borderRadius.md);
 		outline: none;
 		text-align: left;
@@ -121,14 +134,7 @@
 
 	textarea:not(.reset) {
 		padding: theme(padding.2);
-		min-height: 2.5rem;
-	}
-
-	input[type="color"] {
-		padding: 0;
-		width: theme(width.12);
-		height: theme(height.6);
-		border: solid 4px currentColor;
+		min-height: 2.5em;
 	}
 
 	input[type="checkbox"]:not(.reset, .switch) {
@@ -207,13 +213,18 @@
 	}
 
 	[role="menu"]>.content {
-		background-color: theme(colors.white);
+		cursor: auto;
+		font-size: theme(fontSize.sm);
+		font-weight: theme(fontWeight.normal);
+		color: theme(colors.gray.900);
+		background-color: theme(backgroundColor.white);
 		box-shadow: theme(boxShadow.md);
 		border-radius: theme(borderRadius.md);
 		transform-origin: top right;
 		will-change: transform;
+		min-width: theme(width.48);
 
-		@apply divide-y divide-gray-100 ring-1 ring-black ring-opacity-5 shadow-lg focus:outline-none;
+		@apply divide-y divide-black/10 ring-1 ring-black ring-opacity-10 shadow-lg focus:outline-none;
 
 		&,
 		&>[role="group"],
@@ -223,12 +234,17 @@
 		}
 
 		&>[role="group"] {
-			padding: theme(padding.1);
+			padding: theme(padding.1) theme(padding.1);
 
 			&>button {
-				padding: theme(padding.2);
-				gap: theme(gap.2);
-				border-radius: theme(borderRadius.md);
+				/* padding: theme(padding.1) theme(padding.4); */
+				/* border-radius: theme(borderRadius.none); */
+
+				&:hover {
+					color: theme(backgroundColor.neutral.900);
+					background-color: theme(backgroundColor.primary.500);
+					box-shadow: none;
+				}
 			}
 		}
 	}

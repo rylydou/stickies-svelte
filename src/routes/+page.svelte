@@ -10,6 +10,8 @@
 	import ColorPicker from '$lib/components/ColorPicker.svelte'
 	import Dialog from '$lib/components/Dialog.svelte'
 	import DropdownItem from '$lib/components/DropdownItem.svelte'
+	import Icon from '$lib/components/Icon.svelte'
+	import * as Icons from '@steeze-ui/heroicons'
 
 	let store = svelteSyncedStore(doc_store)
 
@@ -26,10 +28,10 @@
 		const list: ListData = {
 			id: id,
 			title: list_title_entry,
-			sticky_uuids: [],
+			stickies: [],
 		}
-		doc.lists_by_id[id] = list
-		doc.lists_order.push({ id })
+		doc.lists[id] = list
+		doc.lists_order.push(id)
 
 		list_title_entry = ''
 	}
@@ -39,11 +41,11 @@
 
 		doc.title = 'Untitled Document'
 
-		doc.lists_by_id = {}
+		doc.lists = {}
 		doc.lists_order = []
 
-		doc.stickies_by_id = {}
-		doc.labels_by_id = {}
+		doc.stickies = {}
+		doc.labels = {}
 
 		doc.next_id = 1
 	}
@@ -82,43 +84,71 @@
 	class="flex flex-col bg-[#0079bf] h-screen w-screen overflow-hidden text-sm text-gray-900"
 >
 	<div class="flex flex-row items-center p-2 gap-1 bg-white z-10">
-		<Button>New</Button>
-		<Dropdown>
+		<Button class="font-bold bg-primary-500">
+			<Icon src={Icons.AdjustmentsHorizontal} /> Stickies
+		</Button>
+		<Dropdown placement="bottom-start">
 			<div role="group">
-				<Button>Are you sure?</Button>
+				{#if ws_connecting}
+					<DropdownItem disabled={true}>Connecting to websocket...</DropdownItem
+					>
+				{:else if ws_connected}
+					<DropdownItem on:click={(e) => websocket_provider.disconnect()}>
+						Disconnect from websocket
+					</DropdownItem>
+				{:else}
+					<DropdownItem on:click={(e) => websocket_provider.connect()}>
+						Connect via websocket
+					</DropdownItem>
+				{/if}
+			</div>
+			<div role="group">
+				<Button
+					on:click={() => {
+						navigator.clipboard.writeText(JSON.stringify(doc, null, '\t'))
+					}}>Copy JSON</Button
+				>
+				<Button
+					on:click={() => {
+						navigator.clipboard.readText().then((str) => {
+							const obj = JSON.parse(str)
+							if (obj) {
+								doc = obj
+							}
+						})
+					}}>Paste JSON</Button
+				>
+				<Button>Test Color & Submenu</Button>
+				<Dropdown trigger="hover" placement="right-start">
+					<ColorPicker />
+				</Dropdown>
+			</div>
+			<div role="group">
+				<Button>Delete Board...</Button>
 				<Dropdown placement="right">
 					<div role="group">
-						<DropdownItem on:click={init_doc}>
-							Are your super duper sure?
-						</DropdownItem>
+						<DropdownItem on:click={init_doc}>Are you sure?</DropdownItem>
 					</div>
 				</Dropdown>
 			</div>
 		</Dropdown>
 
-		<Button>Color</Button>
-		<Dropdown>
-			<ColorPicker />
-		</Dropdown>
-
-		<input type="checkbox" />
-
+		<Button>
+			<Icon src={Icons.MagnifyingGlass} /> Search
+		</Button>
+		<Button>
+			<Icon src={Icons.BarsArrowDown} /> Sort
+		</Button>
+		<Button>
+			<Icon src={Icons.Clock} /> History
+		</Button>
+		<Button>
+			<Icon src={Icons.Trash} /> Trash
+		</Button>
 		<div class="flex-grow" />
-
-		{#if ws_connecting}
-			<Button disabled={true}>Connecting...</Button>
-		{:else if ws_connected}
-			<Button on:click={(e) => websocket_provider.disconnect()}>
-				Disconnect
-			</Button>
-		{:else}
-			<Button
-				class="bg-primary-500"
-				on:click={(e) => websocket_provider.connect()}
-			>
-				Connect
-			</Button>
-		{/if}
+		<Button>
+			<Icon src={Icons.ArrowUpOnSquare} /> Share
+		</Button>
 	</div>
 
 	<div
@@ -127,8 +157,8 @@
 		on:wheel|passive={scroll}
 	>
 		{#if lists}
-			{#each lists as list (list.id)}
-				<ListView {doc} list_id={list.id} />
+			{#each lists as list_id (list_id)}
+				<ListView {doc} {list_id} />
 			{/each}
 
 			<input

@@ -1,7 +1,5 @@
-export function contrast_color(hexcolor: string): string {
-	var r = parseInt(hexcolor.substring(1, 3), 16)
-	var g = parseInt(hexcolor.substring(3, 5), 16)
-	var b = parseInt(hexcolor.substring(5, 7), 16)
-	var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000
-	return (yiq >= 128) ? 'black' : 'white'
+import { Colord, colord } from 'colord'
+
+export function contrast(color: Colord): Colord {
+	return color.isLight() ? colord('#000') : colord('#fff')
 }

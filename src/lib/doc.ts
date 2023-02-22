@@ -1,15 +1,16 @@
+import { Colord } from 'colord'
+
 export type ID = number
-export type WrappedID = { id: ID }
 
 export type DocData = {
 	title: string
 
-	lists_by_id: { [key: ID]: ListData }
-	lists_order: WrappedID[]
+	lists: { [key: ID]: ListData }
+	lists_order: ID[]
 
-	stickies_by_id: { [key: ID]: StickyData }
+	stickies: { [key: ID]: StickyData }
 
-	labels_by_id: { [key: ID]: LabelData }
+	labels: { [key: ID]: LabelData }
 
 	next_id: ID,
 	// used_uuids: Set<UUID>
@@ -20,7 +21,7 @@ export type ListData = {
 	id: ID,
 	title: string,
 
-	sticky_uuids: WrappedID[],
+	stickies: ID[],
 }
 
 export type StickyData = {
@@ -51,4 +52,10 @@ export type ChecklistPart = Part & {
 export type ChecklistPartItem = {
 	title: string,
 	completed: boolean,
+}
+
+export type LinkPart = {
+	type: 'link'
+	title: string,
+	href: string,
 }

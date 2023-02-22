@@ -1,26 +1,34 @@
 <script lang="ts">
-	import type { ChecklistPart, DocData, ID, LabelData } from '$lib/doc'
+	import type {
+		ChecklistPart,
+		DocData,
+		ID,
+		LabelData,
+		LinkPart,
+	} from '$lib/doc'
 
 	let store = svelteSyncedStore(doc_store)
 	$: doc = $store.doc as DocData
-	$: sticky = doc.stickies_by_id[$selected_sticky]
+	$: sticky = doc.stickies[$selected_sticky]
 
 	import Button from '$lib/components/Button.svelte'
 	import * as Icons from '@steeze-ui/heroicons'
-	import { Icon } from '@steeze-ui/svelte-icon'
+	import Icon from '$lib/components/Icon.svelte'
 	import { svelteSyncedStore } from '@syncedstore/svelte'
 	import { Highlight, LineNumbers } from 'svelte-highlight'
 	import json from 'svelte-highlight/languages/json'
-	import { cubicOut, linear } from 'svelte/easing'
+	import { cubicOut } from 'svelte/easing'
 	import { fade, scale } from 'svelte/transition'
 	import ChecklistPartView from './ChecklistPartView.svelte'
 	import { selected_sticky } from './state_store'
 	import { doc_store } from './store'
 	import Dropdown from '$lib/components/Dropdown.svelte'
 	import DropdownItem from '$lib/components/DropdownItem.svelte'
-	import { contrast_color } from '$lib/contrast'
 	import Label from '$lib/components/Label.svelte'
 	import ColorInput from '$lib/components/ColorInput.svelte'
+	import { colord } from 'colord'
+	import { contrast } from '$lib/contrast'
+	import LinkPartView from './LinkPartView.svelte'
 
 	function close() {
 		$selected_sticky = 0
@@ -37,8 +45,19 @@
 		sticky.parts.push(checklist)
 	}
 
+	function add_link() {
+		console.log('adding link...')
+		let link: LinkPart = {
+			type: 'link',
+			title: '',
+			href: '',
+		}
+
+		sticky.parts.push(link)
+	}
+
 	let new_label_entry = ''
-	let new_label_color = '#eab308'
+	let new_label_color = colord('#eab308')
 	function add_label() {
 		let name = new_label_entry
 		if (name.trim().length == 0) name = 'New label'
@@ -47,14 +66,15 @@
 		const id = doc.next_id++
 		const label: LabelData = {
 			id,
-			color: new_label_color,
+			color: new_label_color.toHex(),
 			name,
 		}
-		doc.labels_by_id[id] = label
+		doc.labels[id] = label
 	}
 
 	const parts_lut: { [key: string]: ConstructorOfATypedSvelteComponent } = {
 		checklist: ChecklistPartView,
+		link: LinkPartView,
 	}
 
 	let show_json = false
@@ -88,7 +108,7 @@
 				>
 					<!-- class="bg-red-500 text-white md:bg-transparent md:text-current" -->
 					<Button
-						class="bg-gray-200 md:bg-transparent 2md:hidden"
+						class="bg-gray-200 md:bg-transparent 2md:hidden fat"
 						on:click={close}
 					>
 						<Icon src={Icons.XMark} size="24px" />
@@ -97,29 +117,18 @@
 					<input
 						class="flat font-bold text-base"
 						type="text"
-						bind:value={doc.stickies_by_id[$selected_sticky].title}
+						bind:value={sticky.title}
 					/>
 
 					<!-- #ff8172 -->
-					<Button class="bg-primary-500">
-						<Icon src={Icons.Plus} theme="mini" size="20px" />
+					<Button class="bg-primary-500 fat">
+						<Icon src={Icons.Plus} />
 						Add part
 					</Button>
 					<Dropdown placement="bottom-end">
 						<div role="group">
-							<DropdownItem>
-								<Icon src={Icons.Tag} theme="mini" size="20px" />
-								<div class="block">
-									<span class="font-bold">Tag</span>
-									<p class="whitespace-pre-wrap opacity-50"
-										>Add a tag to this sticky</p
-									>
-								</div>
-							</DropdownItem>
-						</div>
-						<div role="group">
-							<DropdownItem on:click={add_checklist}>
-								<Icon src={Icons.ListBullet} theme="mini" size="20px" />
+							<DropdownItem on:click={add_checklist} class="fat">
+								<Icon src={Icons.ListBullet} />
 								<div class="block">
 									<span class="font-bold">Checklist</span>
 									<p class="whitespace-pre-wrap opacity-50"
@@ -127,18 +136,18 @@
 									>
 								</div>
 							</DropdownItem>
-							<DropdownItem>
-								<Icon src={Icons.Link} theme="mini" size="20px" />
+							<DropdownItem class="fat" on:click={add_link}>
+								<Icon src={Icons.Link} />
 								Link
 							</DropdownItem>
 						</div>
 						<div role="group">
-							<DropdownItem>
-								<Icon src={Icons.Photo} theme="mini" size="20px" />
+							<DropdownItem class="fat">
+								<Icon src={Icons.Photo} />
 								Image
 							</DropdownItem>
-							<DropdownItem>
-								<Icon src={Icons.Calendar} theme="mini" size="20px" />
+							<DropdownItem class="fat">
+								<Icon src={Icons.Calendar} />
 								Due date
 							</DropdownItem>
 						</div>
@@ -150,9 +159,9 @@
 					<!-- Labels -->
 					<div class="flex flex-row gap-1 flex-wrap z-20">
 						{#each sticky.labels as label_id (label_id)}
-							{@const label = doc.labels_by_id[label_id]}
+							{@const label = doc.labels[label_id]}
 							<Label
-								color={label.color}
+								color={colord(label.color)}
 								on:click={(e) =>
 									sticky.labels.splice(sticky.labels.indexOf(label_id))}
 							>
@@ -160,17 +169,17 @@
 							</Label>
 						{/each}
 						<Button>
-							<Icon src={Icons.PlusSmall} size="20px" theme="mini" />
+							<Icon src={Icons.PlusSmall} />
 						</Button>
 						<Dropdown placement="bottom-start">
-							<div role="group" class="gap-1 flex !flex-row flex-wrap">
-								{#each Object.values(doc.labels_by_id).filter((label) => !sticky.labels.includes(label.id)) as label (label.id)}
+							<div class="p-1 gap-1 flex !flex-row flex-wrap w-80">
+								{#each Object.values(doc.labels).filter((label) => !sticky.labels.includes(label.id)) as label (label.id)}
 									<Label
 										class="w-fit !py-1 font-bold"
 										on:click={(e) => sticky.labels.push(label.id)}
-										style="background-color: {label.color}; color: {contrast_color(
-											label.color
-										)};"
+										style="background-color: {label.color}; color: {contrast(
+											colord(label.color)
+										).toHex()};"
 									>
 										{label.name}
 									</Label>
@@ -180,7 +189,7 @@
 									</span>
 								{/each}
 							</div>
-							<div role="group">
+							<div class="p-2 flex flex-col">
 								<Label color={new_label_color}>
 									<ColorInput bind:color={new_label_color} />
 									<input
@@ -188,6 +197,7 @@
 										type="text"
 										placeholder="Create a new label..."
 										bind:value={new_label_entry}
+										maxlength="20"
 										on:keypress={(e) => {
 											if (e.code == 'Enter') add_label()
 										}}

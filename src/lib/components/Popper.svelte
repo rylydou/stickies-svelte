@@ -145,7 +145,6 @@
 		on:mouseenter={optional(activeContent && !clickable, showHandler)}
 		on:mouseleave={optional(activeContent && !clickable, hideHandler)}
 		role="menu"
-		class="absolute font-normal text-sm text-gray-900 cursor-auto"
 		{...$$restProps}
 	>
 		<div

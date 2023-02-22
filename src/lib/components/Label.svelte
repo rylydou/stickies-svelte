@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { contrast_color } from '$lib/contrast'
+	import { contrast } from '$lib/contrast'
+	import { colord } from 'colord'
 
-	export let color = '#ff00ff'
+	export let color = colord('#f0f')
 </script>
 
 <button
 	on:click
-	class="font-bold"
-	style="background-color: {color}; color: {contrast_color(color)};"
+	class="font-bold border border-1 border-black/10"
+	style="background-color: {color.toHex()}; color: {contrast(color).toHex()};"
 	{...$$restProps}
 >
 	<slot>Label</slot>

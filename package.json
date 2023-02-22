@@ -37,6 +37,7 @@
 	"dependencies": {
 		"@syncedstore/core": "^0.4.3",
 		"@syncedstore/svelte": "^0.4.3",
+		"colord": "^2.9.3",
 		"sass": "^1.58.0",
 		"svelt-yjs": "^1.1.0",
 		"y-indexeddb": "^9.0.9",
