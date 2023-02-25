@@ -3,7 +3,7 @@
 	import type { DocData, ListData } from '$lib/doc'
 	import { svelteSyncedStore } from '@syncedstore/svelte'
 	import ListView from './ListView.svelte'
-	import { selected_sticky } from './state_store'
+	import { selected_sticky } from './state'
 	import { doc_store, websocket_provider } from './store'
 	import StickyEditor from './StickyEditor.svelte'
 	import Dropdown from '$lib/components/Dropdown.svelte'
@@ -103,12 +103,12 @@
 				{/if}
 			</div>
 			<div role="group">
-				<Button
+				<DropdownItem
 					on:click={() => {
 						navigator.clipboard.writeText(JSON.stringify(doc, null, '\t'))
-					}}>Copy JSON</Button
+					}}>Copy JSON</DropdownItem
 				>
-				<Button
+				<DropdownItem
 					on:click={() => {
 						navigator.clipboard.readText().then((str) => {
 							const obj = JSON.parse(str)
@@ -116,10 +116,10 @@
 								doc = obj
 							}
 						})
-					}}>Paste JSON</Button
+					}}>Paste JSON</DropdownItem
 				>
 				<Button>Test Color & Submenu</Button>
-				<Dropdown trigger="hover" placement="right-start">
+				<Dropdown trigger="click" placement="right-start">
 					<ColorPicker />
 				</Dropdown>
 			</div>

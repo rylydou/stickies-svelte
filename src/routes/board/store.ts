@@ -1,5 +1,5 @@
 import { getYjsValue, syncedStore } from "@syncedstore/core"
-import type { DocData } from '../lib/doc'
+import type { DocData } from '$lib/doc'
 import { WebsocketProvider } from 'y-websocket'
 import { Doc } from 'yjs'
 import { IndexeddbPersistence } from 'y-indexeddb'

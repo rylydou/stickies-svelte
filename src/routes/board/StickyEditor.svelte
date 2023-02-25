@@ -20,7 +20,7 @@
 	import { cubicOut } from 'svelte/easing'
 	import { fade, scale } from 'svelte/transition'
 	import ChecklistPartView from './ChecklistPartView.svelte'
-	import { selected_sticky } from './state_store'
+	import { selected_sticky } from './state'
 	import { doc_store } from './store'
 	import Dropdown from '$lib/components/Dropdown.svelte'
 	import DropdownItem from '$lib/components/DropdownItem.svelte'

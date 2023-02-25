@@ -11,18 +11,18 @@
 
 <div class="flex flex-row gap-4 items-center">
 	<Icon src={Icons.Link} big />
-	<a class="flex-grow" href={part.href} target="_blank" rel="noreferrer"
-		>{part.title}</a
-	>
-	<Button>Edit</Button>
+	<a href={part.href} target="_blank" rel="noreferrer">{part.title}</a>
+	<Button><Icon src={Icons.PencilSquare} /></Button>
 	<Dropdown placement="auto">
-		<label>
-			<span>Text</span>
-			<input type="text" bind:value={part.title} />
-		</label>
-		<label>
-			<span>Url</span>
-			<input type="url" bind:value={part.href} />
-		</label>
+		<div role="group">
+			<label>
+				<span>Text</span>
+				<input type="text" bind:value={part.title} />
+			</label>
+			<label>
+				<span>Url</span>
+				<input type="url" bind:value={part.href} />
+			</label>
+		</div>
 	</Dropdown>
 </div>

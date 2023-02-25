@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Label from '$lib/components/Label.svelte'
 	import type { ChecklistPart, DocData, ID } from '$lib/doc'
-	import { selected_sticky } from './state_store'
+	import { selected_sticky } from './state'
 	import { crossfade } from 'svelte/transition'
 	import { colord } from 'colord'
 	import Icon from '$lib/components/Icon.svelte'
