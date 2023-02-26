@@ -1,19 +1,22 @@
 <script lang="ts">
+	import Icon from '$lib/components/Icon.svelte'
 	import Label from '$lib/components/Label.svelte'
 	import type { ChecklistPart, DocData, ID } from '$lib/doc'
-	import { selected_sticky } from './state'
-	import { crossfade } from 'svelte/transition'
-	import { colord } from 'colord'
-	import Icon from '$lib/components/Icon.svelte'
+	import { doc_store, selected_sticky } from '$lib/stores/board_state'
 	import * as Icons from '@steeze-ui/heroicons'
+	import { colord } from 'colord'
+	import { getContext } from 'svelte'
+	import type { Writable } from 'svelte/store'
+	import { crossfade } from 'svelte/transition'
 
-	export let doc: DocData
-	export let id: ID
+	export let sticky_id: ID
 
-	$: sticky = doc.stickies[id]
+	const doc = doc_store.doc as DocData
+
+	$: sticky = doc.stickies[sticky_id]
 
 	function click() {
-		selected_sticky.set(id)
+		selected_sticky.set(sticky_id)
 	}
 
 	const [send, receive] = crossfade({
@@ -72,7 +75,7 @@
 	<!-- Badges -->
 	<div class="flex flex-row flex-wrap gap-1 text-gray-500">
 		<!-- Description Badge -->
-		{#if sticky.description.trim().length > 0}
+		{#if sticky.description.length > 0}
 			<div class="p-1 rounded">
 				<svg
 					width="20"

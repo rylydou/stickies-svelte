@@ -1,6 +1,6 @@
 <script>
-	import '../app.css'
-	import '../hljs.css'
+	import '$lib/styles/app.css'
+	import '$lib/styles/hljs.css'
 </script>
 
 <slot />

@@ -18,7 +18,7 @@
 	export let src: IconSource
 	export let big = false
 
-	$: size = big ? '1.5rem' : '1.25rem'
+	$: size = big ? '24px' : '20px'
 	$: icon = src?.[big ? 'default' : 'mini'] ?? src?.['default']
 </script>
 

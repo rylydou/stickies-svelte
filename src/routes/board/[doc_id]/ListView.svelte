@@ -1,10 +1,15 @@
 <script lang="ts">
-	import type { DocData, StickyData, ID } from '$lib/doc'
+	import type { DocData, ID, StickyData } from '$lib/doc'
+	import { doc_store } from '$lib/stores/board_state'
+	import { SyncedText } from '@syncedstore/core'
+	import { getContext } from 'svelte'
+	import type { Writable } from 'svelte/store'
 
 	import StickyView from './StickyView.svelte'
 
-	export let doc: DocData
 	export let list_id: ID
+
+	const doc = doc_store.doc as DocData
 
 	$: list_data = doc.lists[list_id]
 	$: sticky_ids = list_data.stickies
@@ -20,7 +25,7 @@
 		const sticky: StickyData = {
 			id: id,
 			title: todo_title_entry,
-			description: '',
+			description: new SyncedText(''),
 			parts: [],
 			labels: [],
 		}
@@ -40,12 +45,12 @@
 		<input class="font-bold flat" type="text" bind:value={list_data.title} />
 	</div>
 	<div class="px-2 flex flex-col gap-2 overflow-y-auto">
-		{#each sticky_ids as id (id)}
-			{#if id}
+		{#each sticky_ids as sticky_id (sticky_id)}
+			{#if sticky_id}
 				<!-- <div class="sticky">
 					{doc_data.stickies_by_id[id].title}
 				</div> -->
-				<StickyView {doc} {id} />
+				<StickyView {sticky_id} />
 			{:else}
 				~~Error~~
 			{/if}

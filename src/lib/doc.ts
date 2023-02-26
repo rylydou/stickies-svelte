@@ -1,4 +1,4 @@
-import { Colord } from 'colord'
+import { SyncedText } from '@syncedstore/core'
 
 export type ID = number
 
@@ -27,7 +27,7 @@ export type ListData = {
 export type StickyData = {
 	id: ID,
 	title: string,
-	description: string,
+	description: SyncedText,
 	labels: ID[],
 
 	parts: Part[],

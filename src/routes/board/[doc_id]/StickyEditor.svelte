@@ -1,34 +1,28 @@
 <script lang="ts">
-	import type {
-		ChecklistPart,
-		DocData,
-		ID,
-		LabelData,
-		LinkPart,
-	} from '$lib/doc'
-
-	let store = svelteSyncedStore(doc_store)
-	$: doc = $store.doc as DocData
-	$: sticky = doc.stickies[$selected_sticky]
+	import type { ChecklistPart, DocData, LabelData, LinkPart } from '$lib/doc'
 
 	import Button from '$lib/components/Button.svelte'
-	import * as Icons from '@steeze-ui/heroicons'
+	import ColorInput from '$lib/components/ColorInput.svelte'
+	import Dropdown from '$lib/components/Dropdown.svelte'
+	import DropdownItem from '$lib/components/DropdownItem.svelte'
 	import Icon from '$lib/components/Icon.svelte'
-	import { svelteSyncedStore } from '@syncedstore/svelte'
+	import Label from '$lib/components/Label.svelte'
+	import { contrast } from '$lib/contrast'
+	import { doc_store, selected_sticky } from '$lib/stores/board_state'
+	import * as Icons from '@steeze-ui/heroicons'
+	import { colord } from 'colord'
+	import { getContext } from 'svelte'
 	import { Highlight, LineNumbers } from 'svelte-highlight'
 	import json from 'svelte-highlight/languages/json'
 	import { cubicOut } from 'svelte/easing'
 	import { fade, scale } from 'svelte/transition'
 	import ChecklistPartView from './ChecklistPartView.svelte'
-	import { selected_sticky } from './state'
-	import { doc_store } from './store'
-	import Dropdown from '$lib/components/Dropdown.svelte'
-	import DropdownItem from '$lib/components/DropdownItem.svelte'
-	import Label from '$lib/components/Label.svelte'
-	import ColorInput from '$lib/components/ColorInput.svelte'
-	import { colord } from 'colord'
-	import { contrast } from '$lib/contrast'
 	import LinkPartView from './LinkPartView.svelte'
+	import type { Writable } from 'svelte/store'
+
+	const doc = doc_store.doc as DocData
+
+	$: sticky = doc.stickies[$selected_sticky]
 
 	function close() {
 		$selected_sticky = 0
@@ -214,7 +208,6 @@
 							rows="4"
 							placeholder="Add a more detailed description..."
 							bind:value={sticky.description}
-							spellcheck={false}
 						/>
 					</div>
 
