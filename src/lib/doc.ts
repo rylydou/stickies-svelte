@@ -1,40 +1,48 @@
 import { SyncedText } from '@syncedstore/core'
 
-export type ID = number
+export function create_doc(): DocData {
+	var doc = {} as DocData
+	init_doc(doc)
+	return doc
+}
+
+export function init_doc(doc: DocData): void {
+	doc.title = ''
+	doc.labels = {}
+	doc.stickies = {}
+	doc.lists = {}
+	doc.lists_order = []
+}
 
 export type DocData = {
 	title: string
 
-	lists: { [key: ID]: ListData }
-	lists_order: ID[]
+	lists: { [key: string]: ListData }
+	lists_order: string[]
 
-	stickies: { [key: ID]: StickyData }
+	stickies: { [key: string]: StickyData }
 
-	labels: { [key: ID]: LabelData }
-
-	next_id: ID,
-	// used_uuids: Set<UUID>
-	// unused_uuids: UUID[]
+	labels: { [key: string]: LabelData }
 }
 
 export type ListData = {
-	id: ID,
+	id: string,
 	title: string,
 
-	stickies: ID[],
+	stickies: string[],
 }
 
 export type StickyData = {
-	id: ID,
+	id: string,
 	title: string,
 	description: SyncedText,
-	labels: ID[],
+	labels: string[],
 
 	parts: Part[],
 }
 
 export type LabelData = {
-	id: ID,
+	id: string,
 	name: string,
 	color: string,
 }

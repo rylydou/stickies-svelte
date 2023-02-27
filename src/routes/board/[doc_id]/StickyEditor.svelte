@@ -8,24 +8,23 @@
 	import Icon from '$lib/components/Icon.svelte'
 	import Label from '$lib/components/Label.svelte'
 	import { contrast } from '$lib/contrast'
+	import { new_id } from '$lib/id'
 	import { doc_store, selected_sticky } from '$lib/stores/board_state'
 	import * as Icons from '@steeze-ui/heroicons'
 	import { colord } from 'colord'
-	import { getContext } from 'svelte'
 	import { Highlight, LineNumbers } from 'svelte-highlight'
 	import json from 'svelte-highlight/languages/json'
 	import { cubicOut } from 'svelte/easing'
 	import { fade, scale } from 'svelte/transition'
 	import ChecklistPartView from './ChecklistPartView.svelte'
 	import LinkPartView from './LinkPartView.svelte'
-	import type { Writable } from 'svelte/store'
 
-	const doc = doc_store.doc as DocData
+	$: doc = $doc_store.doc as DocData
 
-	$: sticky = doc.stickies[$selected_sticky]
+	$: sticky = doc.stickies[$selected_sticky!]
 
 	function close() {
-		$selected_sticky = 0
+		$selected_sticky = null
 	}
 
 	function add_checklist() {
@@ -57,7 +56,7 @@
 		if (name.trim().length == 0) name = 'New label'
 		new_label_entry = ''
 
-		const id = doc.next_id++
+		const id = new_id()
 		const label: LabelData = {
 			id,
 			color: new_label_color.toHex(),
@@ -78,7 +77,7 @@
 <div
 	data-background={true}
 	class="absolute left-0 top-0 w-full h-full max-h-full md:py-8 overflow-y-auto text-sm z-10"
-	style="pointer-events: {$selected_sticky == 0 ? 'none' : 'all'};"
+	style="pointer-events: {$selected_sticky ? 'all' : 'none'};"
 >
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- Backdrop -->
@@ -95,7 +94,7 @@
 			in:scale={{ start: 0.9, duration: 300, easing: cubicOut }}
 			out:scale={{ start: 0.9, duration: 200, easing: cubicOut }}
 		>
-			{#if $selected_sticky != 0}
+			{#if $selected_sticky}
 				<!-- Header -->
 				<div
 					class="p-2 flex flex-row items-stretch gap-2 sticky top-0 md:-top-8 bg-white z-50 border-b-2 border-b-gray-200 md:rounded-t-lg"
@@ -184,14 +183,13 @@
 								{/each}
 							</div>
 							<div class="p-2 flex flex-col">
-								<Label color={new_label_color}>
+								<Label color={new_label_color} class="p-2">
 									<ColorInput bind:color={new_label_color} />
 									<input
 										class="superflat"
 										type="text"
 										placeholder="Create a new label..."
 										bind:value={new_label_entry}
-										maxlength="20"
 										on:keypress={(e) => {
 											if (e.code == 'Enter') add_label()
 										}}

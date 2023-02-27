@@ -4,13 +4,13 @@
 	import Dropdown from '$lib/components/Dropdown.svelte'
 	import DropdownItem from '$lib/components/DropdownItem.svelte'
 	import Icon from '$lib/components/Icon.svelte'
-	import type { DocData } from '$lib/doc'
+	import { init_doc, type DocData } from '$lib/doc'
 	import { doc_store } from '$lib/stores/board_state'
 	import * as Icons from '@steeze-ui/heroicons'
 	import { getContext } from 'svelte'
 	import type { WebsocketProvider } from 'y-websocket'
 
-	const doc = doc_store.doc as DocData
+	$: doc = $doc_store.doc as DocData
 
 	const y_websocket_provider = getContext<WebsocketProvider>(
 		'y_websocket_provider'
@@ -33,24 +33,29 @@
 		ws_connected = false
 	})
 
-	function init_doc() {
-		console.log('init doc')
-
-		doc.title = 'Untitled Document'
-
-		doc.lists = {}
-		doc.lists_order = []
-
-		doc.stickies = {}
-		doc.labels = {}
-
-		doc.next_id = 1
-	}
+	const doc_id = getContext('doc_id') as string
 </script>
 
-<div class="flex flex-row items-center p-2 gap-1 bg-white z-10">
+<div class="flex flex-row items-stretch p-1 gap-1 bg-white z-10">
 	<Button class="font-bold bg-primary-500">
-		<Icon src={Icons.AdjustmentsHorizontal} /> Stickies
+		<svg
+			width="20"
+			height="20"
+			viewBox="0 0 20 20"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				fill-rule="evenodd"
+				clip-rule="evenodd"
+				d="M4 2C2.89543 2 2 2.89543 2 4V16C2 17.1046 2.89543 18 4 18H13L18 13V4C18 2.89543 17.1046 2 16 2H4ZM4 16V4H16V12H12V16H4Z"
+				fill="currentColor"
+			/>
+			<path d="M6 6V8H14V6H6Z" fill="currentColor" />
+			<path d="M6 12V10H10V12H6Z" fill="currentColor" />
+		</svg>
+
+		{doc_id}
 	</Button>
 	<Dropdown placement="bottom-start">
 		<div role="group">
@@ -87,12 +92,12 @@
 			</Dropdown>
 		</div>
 		<div role="group">
-			<Button>Delete Board...</Button>
-			<Dropdown placement="right">
-				<div role="group">
-					<DropdownItem on:click={init_doc}>Are you sure?</DropdownItem>
-				</div>
-			</Dropdown>
+			<DropdownItem
+				on:click={() => {
+					console.log('init doc')
+					init_doc(doc)
+				}}>Initialize board</DropdownItem
+			>
 		</div>
 	</Dropdown>
 

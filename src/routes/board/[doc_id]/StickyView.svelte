@@ -1,17 +1,15 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte'
 	import Label from '$lib/components/Label.svelte'
-	import type { ChecklistPart, DocData, ID } from '$lib/doc'
+	import type { ChecklistPart, DocData } from '$lib/doc'
 	import { doc_store, selected_sticky } from '$lib/stores/board_state'
 	import * as Icons from '@steeze-ui/heroicons'
 	import { colord } from 'colord'
-	import { getContext } from 'svelte'
-	import type { Writable } from 'svelte/store'
 	import { crossfade } from 'svelte/transition'
 
-	export let sticky_id: ID
+	export let sticky_id: string
 
-	const doc = doc_store.doc as DocData
+	$: doc = $doc_store.doc as DocData
 
 	$: sticky = doc.stickies[sticky_id]
 
@@ -22,6 +20,12 @@
 	const [send, receive] = crossfade({
 		duration: 1000,
 	})
+
+	$: has_badges = (): boolean => {
+		if (sticky.description.length > 0) return true
+		if (sticky.parts.length > 0) return true
+		return false
+	}
 
 	$: checklist_completed_sum = sticky.parts.reduce(
 		(sum, part) =>
@@ -39,10 +43,14 @@
 		0
 	)
 
-	function acronym(text: string): string {
-		return text.split(/\s/).reduce(function (accumulator, word) {
-			return accumulator + word.charAt(0)
-		}, '')
+	function acronym(str: string): string {
+		if (str.length > 10) {
+			return str.split(/\s/).reduce(function (accumulator, word) {
+				return accumulator + word.charAt(0)
+			}, '')
+		}
+
+		return str
 	}
 </script>
 
@@ -59,7 +67,7 @@
 				{@const label = doc.labels[label_id]}
 				<Label
 					color={colord(label.color)}
-					class="px-1 py-0 text-xs rounded"
+					class="px-1 py-0 text-xs rounded font-bold"
 					title={label.name}
 				>
 					{acronym(label.name)}
@@ -73,56 +81,58 @@
 	</div>
 
 	<!-- Badges -->
-	<div class="flex flex-row flex-wrap gap-1 text-gray-500">
-		<!-- Description Badge -->
-		{#if sticky.description.length > 0}
-			<div class="p-1 rounded">
-				<svg
-					width="20"
-					height="20"
-					viewBox="0 0 20 20"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						fill-rule="evenodd"
-						clip-rule="evenodd"
-						d="M18 3H2V5H18V3ZM18 7H2V9H18V7ZM2 11H18V13H2V11ZM12 15H2V17H12V15Z"
-						fill="currentColor"
-					/>
-				</svg>
-			</div>
-		{/if}
+	{#if has_badges()}
+		<div class="flex flex-row flex-wrap gap-1 text-gray-500">
+			<!-- Description Badge -->
+			{#if sticky.description.length > 0}
+				<div class="p-1 rounded">
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 20 20"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							fill-rule="evenodd"
+							clip-rule="evenodd"
+							d="M18 3H2V5H18V3ZM18 7H2V9H18V7ZM2 11H18V13H2V11ZM12 15H2V17H12V15Z"
+							fill="currentColor"
+						/>
+					</svg>
+				</div>
+			{/if}
 
-		<!-- Link Badge -->
-		{#if sticky.parts.find((part) => part.type === 'link')}
-			<div class="p-1 rounded">
-				<Icon src={Icons.Link} />
-			</div>
-		{/if}
+			<!-- Link Badge -->
+			{#if sticky.parts.find((part) => part.type === 'link')}
+				<div class="p-1 rounded">
+					<Icon src={Icons.Link} />
+				</div>
+			{/if}
 
-		<!-- Checklist Badge -->
-		{#if sticky.parts.find((part) => part.type === 'checklist')}
-			<div class="p-1 rounded flex flex-row gap-1">
-				<svg
-					width="20"
-					height="20"
-					viewBox="0 0 20 20"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						fill-rule="evenodd"
-						clip-rule="evenodd"
-						d="M2 16V3.99999C2 2.89542 2.89543 1.99999 4 1.99999H14V3.99999L4 3.99999V16L16 16V10H18V16C18 17.1046 17.1046 18 16 18H4C2.89543 18 2 17.1046 2 16ZM17.7071 5.70711L9.70711 13.7071L9 14.4142L8.29289 13.7071L5.29289 10.7071L6.70711 9.29289L9 11.5858L16.2929 4.29289L17.7071 5.70711Z"
-						fill="currentColor"
-					/>
-				</svg>
+			<!-- Checklist Badge -->
+			{#if sticky.parts.find((part) => part.type === 'checklist')}
+				<div class="p-1 rounded flex flex-row gap-1">
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 20 20"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							fill-rule="evenodd"
+							clip-rule="evenodd"
+							d="M2 16V3.99999C2 2.89542 2.89543 1.99999 4 1.99999H14V3.99999L4 3.99999V16L16 16V10H18V16C18 17.1046 17.1046 18 16 18H4C2.89543 18 2 17.1046 2 16ZM17.7071 5.70711L9.70711 13.7071L9 14.4142L8.29289 13.7071L5.29289 10.7071L6.70711 9.29289L9 11.5858L16.2929 4.29289L17.7071 5.70711Z"
+							fill="currentColor"
+						/>
+					</svg>
 
-				{checklist_completed_sum}/{checklist_total_sum}
-			</div>
-		{/if}
-	</div>
+					{checklist_completed_sum}/{checklist_total_sum}
+				</div>
+			{/if}
+		</div>
+	{/if}
 </button>
 
 <style lang="postcss">

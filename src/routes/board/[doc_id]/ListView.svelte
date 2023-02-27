@@ -1,29 +1,28 @@
 <script lang="ts">
-	import type { DocData, ID, StickyData } from '$lib/doc'
+	import type { DocData, StickyData } from '$lib/doc'
+	import { new_id } from '$lib/id'
 	import { doc_store } from '$lib/stores/board_state'
 	import { SyncedText } from '@syncedstore/core'
-	import { getContext } from 'svelte'
-	import type { Writable } from 'svelte/store'
 
 	import StickyView from './StickyView.svelte'
 
-	export let list_id: ID
+	export let list_id: string
 
-	const doc = doc_store.doc as DocData
+	$: doc = $doc_store.doc as DocData
 
 	$: list_data = doc.lists[list_id]
 	$: sticky_ids = list_data.stickies
 
 	let todo_title_entry = ''
 	function insert() {
-		const id = doc.next_id++
+		const id = new_id()
 
 		if (todo_title_entry.trim().length == 0) {
-			todo_title_entry = 'New sticky #' + id
+			todo_title_entry = 'New sticky'
 		}
 
 		const sticky: StickyData = {
-			id: id,
+			id,
 			title: todo_title_entry,
 			description: new SyncedText(''),
 			parts: [],

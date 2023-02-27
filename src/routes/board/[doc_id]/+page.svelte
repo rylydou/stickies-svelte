@@ -1,24 +1,19 @@
 <script lang="ts">
 	import type { DocData, ListData } from '$lib/doc'
-	import { selected_sticky } from '$lib/stores/board_state'
-	import { getYjsValue, syncedStore } from '@syncedstore/core'
-	import { svelteSyncedStore } from '@syncedstore/svelte'
+	import { new_id } from '$lib/id'
+	import { doc_store, selected_sticky, y_doc } from '$lib/stores/board_state'
 	import { setContext } from 'svelte'
-	import { writable } from 'svelte/store'
 	import { IndexeddbPersistence } from 'y-indexeddb'
 	import { WebsocketProvider } from 'y-websocket'
-	import type { Doc as YDoc } from 'yjs'
 	import ListView from './ListView.svelte'
 	import Menubar from './Menubar.svelte'
 	import StickyEditor from './StickyEditor.svelte'
 
 	export let data: { doc_id: string }
 
-	const synced_doc_store = syncedStore({
-		doc: {} as DocData,
-	})
-	const doc_store = svelteSyncedStore(synced_doc_store)
-	const y_doc = getYjsValue(synced_doc_store) as YDoc
+	setContext('doc_id', data.doc_id)
+
+	$: doc = $doc_store.doc as DocData
 
 	const indexdb_provider = new IndexeddbPersistence(data.doc_id, y_doc)
 	setContext('y_indexdb_persistance', indexdb_provider)
@@ -34,11 +29,7 @@
 	})
 	setContext('y_websocket_provider', websocket_provider)
 
-	$: doc = $doc_store.doc as DocData
 	$: lists = doc.lists_order
-
-	setContext('doc', $doc_store.doc as DocData)
-	setContext('doc_store', synced_doc_store)
 
 	let list_title_entry = ''
 	function insert() {
@@ -46,9 +37,9 @@
 			list_title_entry = 'New list'
 		}
 
-		const id = doc.next_id++
+		const id = new_id()
 		const list: ListData = {
-			id: id,
+			id,
 			title: list_title_entry,
 			stickies: [],
 		}
@@ -88,7 +79,7 @@
 
 			<input
 				type="text"
-				class="bg-gray-200 max-w-36"
+				class="bg-gray-200 w-80 font-bold"
 				placeholder="Add a new list..."
 				bind:value={list_title_entry}
 				on:keypress={(e) => {
@@ -102,8 +93,7 @@
 		{/if}
 	</div>
 </div>
-
-{#if $selected_sticky != 0}
+{#if $selected_sticky}
 	<StickyEditor />
 {/if}
 

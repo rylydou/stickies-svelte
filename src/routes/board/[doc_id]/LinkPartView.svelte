@@ -12,7 +12,7 @@
 	<Icon src={Icons.Link} big />
 	<a href={part.href} target="_blank" rel="noreferrer">{part.title}</a>
 	<Button><Icon src={Icons.PencilSquare} /></Button>
-	<Dropdown placement="auto">
+	<Dropdown placement="bottom-end">
 		<div role="group">
 			<label>
 				<span>Text</span>
