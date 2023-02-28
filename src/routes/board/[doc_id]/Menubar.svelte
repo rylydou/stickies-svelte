@@ -36,8 +36,10 @@
 	const doc_id = getContext('doc_id') as string
 </script>
 
-<div class="flex flex-row items-stretch p-1 gap-1 bg-white z-10">
-	<Button class="font-bold bg-primary-500">
+<div
+	class="flex flex-row items-stretch p-1 gap-1 bg-gradient-to-b from-black/25 z-10 text-white"
+>
+	<Button class="font-bold">
 		<svg
 			width="20"
 			height="20"
@@ -55,7 +57,8 @@
 			<path d="M6 12V10H10V12H6Z" fill="currentColor" />
 		</svg>
 
-		{doc_id}
+		Menu
+		<!-- {doc_id} -->
 	</Button>
 	<Dropdown placement="bottom-start">
 		<div role="group">

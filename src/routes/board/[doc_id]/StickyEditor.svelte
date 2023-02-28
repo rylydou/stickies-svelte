@@ -150,7 +150,7 @@
 				<!-- Content -->
 				<div class="w-full p-4 flex flex-col gap-4">
 					<!-- Labels -->
-					<div class="flex flex-row gap-1 flex-wrap z-20">
+					<div class="flex flex-row gap-1 flex-wrap z-10">
 						{#each sticky.labels as label_id (label_id)}
 							{@const label = doc.labels[label_id]}
 							<Label

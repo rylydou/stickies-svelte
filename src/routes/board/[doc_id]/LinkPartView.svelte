@@ -6,6 +6,7 @@
 	import Dropdown from '$lib/components/Dropdown.svelte'
 
 	export let part: LinkPart
+	//
 </script>
 
 <div class="flex flex-row gap-4 items-center">

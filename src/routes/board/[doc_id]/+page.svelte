@@ -63,7 +63,7 @@
 </svelte:head>
 
 <div
-	class="flex flex-col bg-[#0079bf] h-screen w-screen overflow-hidden text-sm text-gray-900"
+	class="flex flex-col bg-gradient-to-br from-cyan-700 to-blue-700 h-screen w-screen overflow-hidden text-sm text-gray-900"
 >
 	<Menubar />
 

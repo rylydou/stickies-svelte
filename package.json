@@ -10,6 +10,7 @@
 		"serve": "HOST=localhost PORT=1234 npx y-websocket"
 	},
 	"devDependencies": {
+		"@fontsource/clear-sans": "^4.5.3",
 		"@fontsource/fira-mono": "^4.5.10",
 		"@fontsource/fira-sans": "^4.5.10",
 		"@fontsource/roboto-slab": "^4.5.11",
