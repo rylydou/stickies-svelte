@@ -76,7 +76,7 @@
 <!-- Wrapper -->
 <div
 	data-background={true}
-	class="absolute left-0 top-0 w-full h-full max-h-full md:py-8 overflow-y-auto text-sm z-10"
+	class="absolute left-0 top-0 w-full h-full max-h-full md:py-8 overflow-y-auto text-sm"
 	style="pointer-events: {$selected_sticky ? 'all' : 'none'};"
 >
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -97,7 +97,7 @@
 			{#if $selected_sticky}
 				<!-- Header -->
 				<div
-					class="p-2 flex flex-row items-stretch gap-2 sticky top-0 md:-top-8 bg-white z-50 border-b-2 border-b-gray-200 md:rounded-t-lg"
+					class="p-2 flex flex-row items-stretch gap-2 sticky top-0 md:-top-8 bg-white border-b-2 border-b-gray-200 md:rounded-t-lg"
 				>
 					<!-- class="bg-red-500 text-white md:bg-transparent md:text-current" -->
 					<Button

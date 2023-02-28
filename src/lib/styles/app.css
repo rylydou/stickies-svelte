@@ -249,4 +249,9 @@
 			}
 		}
 	}
+
+	#portal-root {
+		position: absolute;
+		z-index: 9001;
+	}
 }

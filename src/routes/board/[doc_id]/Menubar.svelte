@@ -37,7 +37,7 @@
 </script>
 
 <div
-	class="flex flex-row items-stretch p-1 gap-1 bg-gradient-to-b from-black/25 z-10 text-white"
+	class="flex flex-row items-stretch p-1 gap-1 bg-gradient-to-b from-black/25 text-white"
 >
 	<Button class="font-bold">
 		<svg

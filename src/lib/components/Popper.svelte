@@ -5,6 +5,8 @@
 	// import createEventDispatcher from './createEventDispatcher'
 	import { scale } from 'svelte/transition'
 	import { cubicIn, cubicOut } from 'svelte/easing'
+	import PortalGroup from './PortalGroup.svelte'
+	import Portal from './Portal.svelte'
 	export let activeContent: boolean = false
 	export let arrow: boolean = true
 	export let offset: number = 4
@@ -137,23 +139,27 @@
 	<div bind:this={contentEl} />
 {/if}
 {#if open && triggerEl}
-	<div
-		use:init={triggerEl}
-		tabIndex={activeContent ? -1 : undefined}
-		on:focusin={optional(activeContent, showHandler)}
-		on:focusout={optional(activeContent, hideHandler)}
-		on:mouseenter={optional(activeContent && !clickable, showHandler)}
-		on:mouseleave={optional(activeContent && !clickable, hideHandler)}
-		role="menu"
-		{...$$restProps}
-	>
+	<!-- <PortalGroup target={document.body}> -->
+	<Portal>
 		<div
-			class="content origin-top-right max-h-96"
-			in:scale={{ start: 0.95, duration: 100, easing: cubicOut }}
-			out:scale={{ start: 0.95, duration: 75, easing: cubicOut }}
+			use:init={triggerEl}
+			tabIndex={activeContent ? -1 : undefined}
+			on:focusin={optional(activeContent, showHandler)}
+			on:focusout={optional(activeContent, hideHandler)}
+			on:mouseenter={optional(activeContent && !clickable, showHandler)}
+			on:mouseleave={optional(activeContent && !clickable, hideHandler)}
+			role="menu"
+			{...$$restProps}
 		>
-			<slot />
-			{#if arrow}<div data-popper-arrow class="popper-arrow" />{/if}
+			<div
+				class="content origin-top-right max-h-96"
+				in:scale={{ start: 0.95, duration: 100, easing: cubicOut }}
+				out:scale={{ start: 0.95, duration: 75, easing: cubicOut }}
+			>
+				<slot />
+				{#if arrow}<div data-popper-arrow class="popper-arrow" />{/if}
+			</div>
 		</div>
-	</div>
+	</Portal>
+	<!-- </PortalGroup> -->
 {/if}
